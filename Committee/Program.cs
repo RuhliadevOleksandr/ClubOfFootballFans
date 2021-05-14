@@ -12,7 +12,7 @@ namespace FootballFans
         {
         }
     }
-    class Committee
+    public class Committee
     {
 
     }
