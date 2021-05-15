@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballFansLib", "ClubOfFootballFans\FootballFansLib.csproj", "{2E896F5A-2307-492E-A143-7C304476A990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Committee", "Committee\Committee.csproj", "{127F594F-404E-4E32-A124-F4AAA0A3C328}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FootballFans", "Committee\FootballFans.csproj", "{127F594F-404E-4E32-A124-F4AAA0A3C328}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

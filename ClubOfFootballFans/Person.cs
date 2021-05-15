@@ -7,6 +7,20 @@ namespace FootballFansLib
 {
     public abstract class Person
     {
-        protected string _surname;
+        private string _surname;
+        public string Surname
+        { 
+            get 
+            {
+                return _surname;
+            } 
+        }
+        public Person(string surname)
+        {
+            if (surname != null)
+            {
+                _surname = surname;
+            }
+        }
     }
 }

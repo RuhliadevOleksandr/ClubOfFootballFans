@@ -7,18 +7,15 @@ namespace FootballFansLib
 {
     public class FootballFan : Person, IRootable
     {
-        public FootballPlayer FavouritePlayer { set; get; }
-        public FootballTeam FavouriteTeam { set; get; }
-        public FootballFan(string surname)
-        {
-            if (surname != null)
-            {
-                _surname = surname;
-            }
-        }
+        public string FavouritePlayer { set; get; }
+        public string FavouriteTeam { set; get; }
+        public FootballFan(string surname) : base(surname){}
         void IRootable.Root()
         {
-            Console.WriteLine("Huray!");
+            if (FavouritePlayer != null)
+                Console.WriteLine($"\nHuray! {FavouritePlayer}!");
+            if (FavouriteTeam != null)
+                Console.WriteLine($"\nHuray! {FavouriteTeam}!");
         }
     }
 }

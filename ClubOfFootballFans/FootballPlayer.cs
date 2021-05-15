@@ -7,28 +7,19 @@ namespace FootballFansLib
 {
     public class FootballPlayer : Person, IRootable
     {
-        public int NumberOfAwards { private set; get; }
         private int _experience;
-        public FootballPlayer(string surname)
+        public FootballPlayer(string surname) : base(surname)
         {
-            if (surname != null)
-            {
-                _surname = surname;
-                _experience = 0;
-            }
+           _experience = 0;
         }
-        public FootballPlayer(string surname, int experience)
+        public FootballPlayer(string surname, int experience) :base(surname)
         {
-            if (surname != null)
-            {
-                _surname = surname;
-                if (experience >= 0)
+            if (experience >= 0)
                     _experience = experience;
-            }
         }
         void IRootable.Root()
         {
-            Console.WriteLine("Hooray!");
+            Console.WriteLine($"\nHooray! {Surname}!");
         }
     }
 

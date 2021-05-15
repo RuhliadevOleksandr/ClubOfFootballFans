@@ -14,6 +14,7 @@ namespace FootballFansLib
             if (matches != null)
             {
                 _numberOfMatches = matches.Length;
+                season = new Match[_numberOfMatches];
                 for (int i = 0; i < _numberOfMatches; i++)
                 {
                     season[i] = matches[i];

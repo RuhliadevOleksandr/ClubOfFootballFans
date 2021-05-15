@@ -7,11 +7,18 @@ namespace FootballFansLib
 {
     public class FanClub
     {
-        private string _meetingPlace;
-        Group club;
+        private Group club;
         public FanClub(FootballFan[] footballFans, string nameFanClub)
         {
             club = new Group(footballFans, nameFanClub);
+        }
+        public void AddFan(FootballFan footballFan)
+        {
+            club.AddMember(footballFan);
+        }
+        public void RemoveFan(FootballFan footballFan)
+        {
+            club.RemoveMember(footballFan);
         }
     }
 }
