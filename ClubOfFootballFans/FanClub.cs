@@ -5,20 +5,23 @@ using System.Text;
 
 namespace FootballFansLib
 {
-    public class FanClub
+    public class FanClub : IRootable
     {
         private Group club;
+
+        public string FavouritePlayer { get; set; }
+        public string FavouriteTeam { get; set; }
+
         public FanClub(FootballFan[] footballFans, string nameFanClub)
         {
-            club = new Group(footballFans, nameFanClub);
-            //try
-            //{
-            //    club = new Group(footballFans, nameFanClub);
-            //}
-            //catch (Exception message)
-            //{
-            //    throw new Exception(message.ToString());
-            //}
+            try
+            {
+                club = new Group(footballFans, nameFanClub);
+            }
+            catch (NullReferenceException exception)
+            {
+                throw new NullReferenceException(exception.Message);
+            }
         }
         public string[] GetSurnamesOfClub()
         {
@@ -26,11 +29,25 @@ namespace FootballFansLib
         }
         public void AddFan(FootballFan footballFan)
         {
-            club.AddMember(footballFan);
+            try
+            {
+                club.AddMember(footballFan);
+            }
+            catch (NullReferenceException exception)
+            {
+                throw new NullReferenceException(exception.Message);
+            }
         }
         public void RemoveFan(FootballFan footballFan)
         {
-            club.RemoveMember(footballFan);
+            try
+            {
+                club.RemoveMember(footballFan);
+            }
+            catch (NullReferenceException exception)
+            {
+                throw new NullReferenceException(exception.Message);
+            }
         }
         public string GetNameOfClub()
         {

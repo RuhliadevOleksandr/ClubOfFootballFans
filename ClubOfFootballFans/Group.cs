@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FootballFansLib
 {
@@ -37,10 +34,10 @@ namespace FootballFansLib
                 if (nameOfGroup != null)
                     _nameOfGroup = nameOfGroup;
                 else
-                    throw new Exception("");
+                    throw new NullReferenceException("Group must have name!");
             }
             else
-                throw new Exception("");
+                throw new NullReferenceException("You can't create a group of people from nothing!");
         }
         public string[] GetSurnamesOfMember()
         {
@@ -60,7 +57,7 @@ namespace FootballFansLib
                     if (group[i] == person)
                         isMember = true;
                 if (isMember)
-                    throw new Exception("");
+                    throw new NullReferenceException($" {person.Surname} is a member! You can't add {person.Surname} to {NameOfGroup} again!");
                 else
                 {
                     Person[] oldGroup = new Person[_numberOfMembers];
@@ -78,7 +75,7 @@ namespace FootballFansLib
                 }
             }
             else
-                throw new Exception("");
+                throw new NullReferenceException("You can't create a group of people from nothing!");
         }
         public void RemoveMember(Person person)
         {
@@ -110,10 +107,10 @@ namespace FootballFansLib
                     }
                 }
                 else
-                    throw new Exception("");
+                    throw new NullReferenceException($" {person.Surname} isn't a member! You can't remove {person.Surname} from {NameOfGroup}!");
             }
             else
-                throw new Exception("");
+                throw new NullReferenceException("You can't create a group of people from nothing!");
         }
     }
 }

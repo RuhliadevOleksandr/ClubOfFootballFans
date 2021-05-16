@@ -8,20 +8,21 @@ namespace FootballFansLib
     public class FootballTeam : IRootable
     {
         public int NumberOfAwards { internal set; get; }
+        public string FavouritePlayer { get; set; }
+        public string FavouriteTeam { get; set; }
+
         private Group team;
         public FootballTeam(FootballPlayer[] footballPlayers, string nameFootballTeam)
         {
-            team = new Group(footballPlayers, nameFootballTeam);
-            NumberOfAwards = 0;
-            //try
-            //{
-            //    team = new Group(footballPlayers, nameFootballTeam);
-            //    NumberOfAwards = 0;
-            //}
-            //catch (Exception message)
-            //{
-            //    throw new Exception(message.ToString());
-            //}
+            try
+            {
+                team = new Group(footballPlayers, nameFootballTeam);
+                NumberOfAwards = 0;
+            }
+            catch (NullReferenceException message)
+            {
+                throw new NullReferenceException(message.ToString());
+            }
         }
         public string[] GetSurnamesOfTeam()
         {
@@ -29,27 +30,25 @@ namespace FootballFansLib
         }
         public void AddPlayer(FootballPlayer footballPlayer)
         {
-            team.AddMember(footballPlayer);
-            //try
-            //{
-            //    team.AddMember(footballPlayer);
-            //}
-            //catch (Exception message)
-            //{
-            //    throw new Exception(message.ToString());
-            //}
+            try
+            {
+                team.AddMember(footballPlayer);
+            }
+            catch (NullReferenceException exception)
+            {
+                throw new NullReferenceException(exception.Message);
+            }
         }
         public void RemovePlayer(FootballPlayer footballPlayer)
         {
-            team.RemoveMember(footballPlayer);
-            //try
-            //{
-            //    team.RemoveMember(footballPlayer);
-            //}
-            //catch (Exception message)
-            //{
-            //    throw new Exception(message.ToString());
-            //}
+            try
+            {
+                team.RemoveMember(footballPlayer);
+            }
+            catch (NullReferenceException exception)
+            {
+                throw new NullReferenceException(exception.Message);
+            }
         }
         public string GetNameOfTeam()
         {
@@ -58,10 +57,6 @@ namespace FootballFansLib
         public int GetNumberOfMembers()
         {
             return team.NumberOfMembers;
-        }
-        public void Root()
-        {
-            Console.WriteLine($"Hooray! {team.NameOfGroup}!");
         }
     }
 }

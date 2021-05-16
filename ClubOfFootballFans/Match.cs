@@ -20,6 +20,8 @@ namespace FootballFansLib
                 MembersOfTheMatch[0] = team.GetNameOfTeam();
                 MembersOfTheMatch[1] = team2.GetNameOfTeam();
             }
+            else
+                throw new NullReferenceException("Match need to have date!");
         }
         public void EndOfTheMatch(FootballTeam[] teams, Match.Result result)
         {
