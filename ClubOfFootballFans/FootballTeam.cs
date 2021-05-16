@@ -13,6 +13,15 @@ namespace FootballFansLib
         {
             team = new Group(footballPlayers, nameFootballTeam);
             NumberOfAwards = 0;
+            //try
+            //{
+            //    team = new Group(footballPlayers, nameFootballTeam);
+            //    NumberOfAwards = 0;
+            //}
+            //catch (Exception message)
+            //{
+            //    throw new Exception(message.ToString());
+            //}
         }
         public string[] GetSurnamesOfTeam()
         {
@@ -21,10 +30,26 @@ namespace FootballFansLib
         public void AddPlayer(FootballPlayer footballPlayer)
         {
             team.AddMember(footballPlayer);
+            //try
+            //{
+            //    team.AddMember(footballPlayer);
+            //}
+            //catch (Exception message)
+            //{
+            //    throw new Exception(message.ToString());
+            //}
         }
         public void RemovePlayer(FootballPlayer footballPlayer)
         {
             team.RemoveMember(footballPlayer);
+            //try
+            //{
+            //    team.RemoveMember(footballPlayer);
+            //}
+            //catch (Exception message)
+            //{
+            //    throw new Exception(message.ToString());
+            //}
         }
         public string GetNameOfTeam()
         {

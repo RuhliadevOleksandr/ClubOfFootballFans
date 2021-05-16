@@ -21,6 +21,8 @@ namespace FootballFansLib
             {
                 _surname = surname;
             }
+            else
+                throw new Exception("");
         }
     }
 }

@@ -10,12 +10,31 @@ namespace FootballFansLib
         private int _experience;
         public FootballPlayer(string surname) : base(surname)
         {
-           _experience = 0;
+            //try
+            //{
+            //  _experience = 0;
+            //}
+            //catch (Exception message)
+            //{
+            //    throw new Exception(message.ToString());
+            //}
+            _experience = 0;
         }
         public FootballPlayer(string surname, int experience) :base(surname)
         {
+            //try
+            //{
+            //  if (experience >= 0)
+            //      _experience = experience;
+            //}
+            //catch (Exception message)
+            //{
+            //    throw new Exception(message.ToString());
+            //}
             if (experience >= 0)
-                    _experience = experience;
+                _experience = experience;
+            else
+                throw new Exception("");
         }
         void IRootable.Root()
         {

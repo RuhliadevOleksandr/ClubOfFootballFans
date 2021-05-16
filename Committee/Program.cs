@@ -11,52 +11,154 @@ namespace FootballFans
     {
         static void Main(string[] args)
         {
-            DisplayMenu();
-            FootballTeam[] commandRegister = CaptainOfFootballTeam.CreateTeams();
+            ShowMenu(); 
+            FanClub fanClub = null;
+            Season matchRegister = null;
+            FootballTeam[] teamRegister = null;
             bool isWorking = true;
             while (isWorking)
             {
                 Console.Write("Choose one point of the list: ");
-                Int32.TryParse(Console.ReadLine(), out int choise);
-                switch (choise)
+                bool isParsed = Int32.TryParse(Console.ReadLine(), out int choise);
+                if(choise <= 7 && choise >= 0 && isParsed)
                 {
-                    case 0:
-                        isWorking = false;
-                        break;
-                    case 1:
-                        Season matchRegister = Committee.CreateSeason(in commandRegister);
-                        break;
-                    case 2:
-                        FanClub fanClub = HeadOfFanClub.CreateFanClub();
-                        break;
-                    case 3:
-                        ShowCommandRegister(in commandRegister);
-                        break;
+                    switch (choise)
+                    {
+                        case 0:
+                            isWorking = false;
+                            break;
+                        case 1:
+                            fanClub = HeadOfFanClub.CreateFanClub();
+                            ShowMenu();
+                            break;
+                        case 2:
+                            teamRegister = CaptainsOfFootballTeams.CreateTeams();
+                            Console.WriteLine("\nYou formed football teams!");
+                            ShowMenu();
+                            break;
+                        case 3:
+                            if (teamRegister != null)
+                            {
+                                matchRegister = Committee.CreateSeason(in teamRegister);
+                            }
+                            else
+                                Console.WriteLine("\nYou haven't already form football teams!");
+                            ShowMenu();
+                            break;
+                        case 4:
+                            if (fanClub != null)
+                            {
+                                ShowFanClub(in fanClub);
+                            }
+                            else
+                                Console.WriteLine("\nYou haven't already create fan club!");
+                            ShowMenu();
+                            break;
+                        case 5:
+                            if(teamRegister != null)
+                            {
+                                ShowTeamRegister(in teamRegister);
+                            }
+                            else
+                                Console.WriteLine("\nYou haven't already form football teams!");
+                            ShowMenu();
+                            break;
+                        case 6:
+                            if (matchRegister != null)
+                            {
+                                ShowMatchRegister(in matchRegister);
+                            }
+                            else
+                                Console.WriteLine("\nYou haven't already start the season!");
+                            ShowMenu();
+                            break;
+                        case 7:
+                            if(teamRegister != null)
+                            {
+                                if (matchRegister != null)
+                                {
+                                    ShowResultOfSeason(in matchRegister, in teamRegister);
+                                }
+                                else
+                                    Console.WriteLine("\nYou haven't already start the season!");
+                            }
+                            else
+                                Console.WriteLine("\nYou haven't already form football teams!");
+                            ShowMenu();
+                            break;
+                    }
                 }
+                else
+                    Console.WriteLine("\nThere isn't such point! Please try again\n");
             }
         }
-        static void DisplayMenu()
+        static void ShowMenu()
         {
             Console.WriteLine("\n========================================\n");
             Console.WriteLine(" Enter 0 - to stop the program");
-            Console.WriteLine(" Enter 1 - to start the season");
-            Console.WriteLine(" Enter 2 - to create fan club");
-            Console.WriteLine(" Enter 3 - to show command register");
+            Console.WriteLine(" Enter 1 - to create fan club");
+            Console.WriteLine(" Enter 2 - to form football teams");
+            Console.WriteLine(" Enter 3 - to start the season");
+            Console.WriteLine(" Enter 4 - to show fan club");
+            Console.WriteLine(" Enter 5 - to show command register");
+            Console.WriteLine(" Enter 6 - to show match register");
+            Console.WriteLine(" Enter 7 - to show result of season");
             Console.WriteLine("\n========================================\n");
         }
-        static void ShowCommandRegister(in FootballTeam[] commandRegister)
+        static void ShowFanClub(in FanClub fanClub)
         {
-            int numberOfTeams = commandRegister.Length;
             Console.WriteLine("\n========================================\n");
+            Console.WriteLine($"Fan club: {fanClub.GetNameOfClub()}");
+            int numberOfMembers = fanClub.GetNumberOfMembers();
+            string[] surnames = fanClub.GetSurnamesOfClub();
+            for (int j = 0; j < numberOfMembers; j++)
+            {
+                Console.WriteLine($"Surname: {surnames[j]}");
+            }
+            Console.WriteLine("\n========================================\n");
+        }
+        static void ShowTeamRegister(in FootballTeam[] teamRegister)
+        {
+            int numberOfTeams = teamRegister.Length;
+            Console.WriteLine("\n========================================\n");
+            Console.WriteLine("Register of teams:");
             for (int i = 0; i < numberOfTeams; i++)
             {
-                Console.WriteLine($"\n{commandRegister[i].GetNameOfTeam()}:");
-                int numberOfMembers = commandRegister[i].GetNumberOfMembers();
-                string[] surnames = commandRegister[i].GetSurnamesOfTeam();
+                Console.WriteLine($"\n{teamRegister[i].GetNameOfTeam()}:");
+                int numberOfMembers = teamRegister[i].GetNumberOfMembers();
+                string[] surnames = teamRegister[i].GetSurnamesOfTeam();
                 for (int j = 0; j < numberOfMembers; j++)
                 {
                     Console.WriteLine($"Surname: {surnames[j]}");
                 }
+            }
+            Console.WriteLine("\n========================================\n");
+        }
+        static void ShowMatchRegister(in Season matchRegister)
+        {
+            Console.WriteLine("\n========================================\n");
+            Console.WriteLine("Register of matches:");
+            int numberOfMatches = matchRegister.NumberOfMatches;
+            string[][] membersOfTheMatches = matchRegister.MembersOfTheMatches();
+            string[] datesOfTheMatches = matchRegister.GetDatesOfTheMatches();
+            for (int j = 0; j < numberOfMatches; j++)
+            {
+                Console.Write($"\nMembers Of the {j + 1} match: {membersOfTheMatches[0][j]}");
+                Console.WriteLine($" vs {membersOfTheMatches[1][j]}");
+                Console.WriteLine($"Date Of the {j + 1} match: {datesOfTheMatches[j]}");
+            }
+            Console.WriteLine("\n========================================\n");
+        }
+        static void ShowResultOfSeason(in Season matchRegister, in FootballTeam[] teamRegister)
+        {
+            Committee.FinishSeason(in matchRegister, in teamRegister);
+            Console.WriteLine("\n========================================\n");
+            Console.WriteLine("Result of matches(number of awards):");
+            int numberOfTeams = teamRegister.Length;
+            for (int j = 0; j < numberOfTeams; j++)
+            {
+                Console.Write($"\n{teamRegister[j].GetNameOfTeam()} :");
+                Console.WriteLine(teamRegister[0].NumberOfAwards);
             }
             Console.WriteLine("\n========================================\n");
         }
@@ -67,20 +169,38 @@ namespace FootballFans
         {
             Console.Write("\nEnter the name of fan club: ");
             string nameOfFanClub = Console.ReadLine();
-            Console.Write("Enter the number of fan club members: ");
-            Int32.TryParse(Console.ReadLine(), out int numberOfMembers);
-            FootballFan[] footballFans = new FootballFan[numberOfMembers];
-            for (int i = 0; i < numberOfMembers; i++)
+            bool isParsed = false;
+            FanClub club = null;
+            while (!isParsed)
             {
-                Console.Write($"Enter the surname of {i + 1} fan: ");
-                string surname = Console.ReadLine();
-                footballFans[0] = new FootballFan(surname);
+                Console.Write("Enter the number of fan club members: ");
+                isParsed = Int32.TryParse(Console.ReadLine(), out int numberOfMembers);
+                if (isParsed && numberOfMembers > 1)
+                {
+                    FootballFan[] footballFans = new FootballFan[numberOfMembers];
+                    for (int i = 0; i < numberOfMembers; i++)
+                    {
+                        Console.Write($"Enter the surname of {i + 1} fan: ");
+                        string surname = Console.ReadLine();
+                        //try
+                        //{
+                        //    footballFans[i] = new FootballFan(surname);
+                        //}
+                        //catch (Exception exception)
+                        //{
+                        //    Console.WriteLine($"{exception.Message}");
+                        //}
+                        footballFans[i] = new FootballFan(surname);
+                    }
+                    club = new FanClub(footballFans, nameOfFanClub);
+                }
+                else
+                    Console.WriteLine("\nThe number of fan club members must be more than one!");
             }
-            FanClub club = new FanClub(footballFans, nameOfFanClub);
             return club;
         }
     }
-    public abstract class CaptainOfFootballTeam
+    public abstract class CaptainsOfFootballTeams
     {
         public static FootballTeam[] CreateTeams()
         {
@@ -134,6 +254,14 @@ namespace FootballFans
                     break;
             }
             return match;
+        }
+        public static void FinishSeason(in Season matchRegister, in FootballTeam[] teamRegister)
+        {
+            Match.Result[] result = new Match.Result[3];
+            result[0] = Match.Result.Win;
+            result[1] = Match.Result.Lose;
+            result[2] = Match.Result.Draw;
+            matchRegister.AddResultOfMatch(teamRegister, result);
         }
     }
 }

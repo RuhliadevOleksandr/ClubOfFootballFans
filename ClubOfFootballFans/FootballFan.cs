@@ -9,7 +9,17 @@ namespace FootballFansLib
     {
         public string FavouritePlayer { set; get; }
         public string FavouriteTeam { set; get; }
-        public FootballFan(string surname) : base(surname){}
+        public FootballFan(string surname) : base(surname)
+        {
+            //try
+            //{
+
+            //}
+            //catch (Exception message)
+            //{
+            //    throw new Exception(message.ToString());
+            //}
+        }
         void IRootable.Root()
         {
             if (FavouritePlayer != null)
