@@ -53,7 +53,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClubOfFootballFans\FootballFansLib.csproj">
+    <ProjectReference Include="..\FootballFansLib\FootballFansLib.csproj">
       <Project>{2e896f5a-2307-492e-a143-7c304476a990}</Project>
       <Name>FootballFansLib</Name>
     </ProjectReference>
