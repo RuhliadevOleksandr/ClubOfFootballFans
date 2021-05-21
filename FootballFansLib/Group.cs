@@ -4,35 +4,21 @@ namespace FootballFansLib
 {
     public class Group
     {
-        private int _numberOfMembers;
-        private string _nameOfGroup;
-        public int NumberOfMembers
-        {
-            get
-            {
-                return _numberOfMembers;
-            }
-        }
-        public string NameOfGroup
-        {
-            get
-            {
-                return _nameOfGroup; ;
-            }
-        }
+        public int NumberOfMembers { get; private set; }
+        public string NameOfGroup { get; private set; }
         private Person[] group;
         public Group(Person[] people, string nameOfGroup)
         {
             if (people != null)
             {
-                _numberOfMembers = people.Length;
-                group = new Person[_numberOfMembers];
-                for (int i = 0; i < _numberOfMembers; i++)
+                NumberOfMembers = people.Length;
+                group = new Person[NumberOfMembers];
+                for (int i = 0; i < NumberOfMembers; i++)
                 {
                     group[i] = people[i];
                 }
                 if (nameOfGroup != null)
-                    _nameOfGroup = nameOfGroup;
+                    NameOfGroup = nameOfGroup;
                 else
                     throw new NullReferenceException("Group must have name!");
             }
@@ -41,8 +27,8 @@ namespace FootballFansLib
         }
         public string[] GetSurnamesOfMember()
         {
-            string[] surnames = new string[_numberOfMembers];
-            for (int i = 0; i < _numberOfMembers; i++)
+            string[] surnames = new string[NumberOfMembers];
+            for (int i = 0; i < NumberOfMembers; i++)
             {
                 surnames[i] = group[i].Surname;
             }
@@ -53,25 +39,25 @@ namespace FootballFansLib
             if (group != null)
             {
                 bool isMember = false;
-                for (int i = _numberOfMembers - 1; i >= 0; i--)
+                for (int i = NumberOfMembers - 1; i >= 0; i--)
                     if (group[i] == person)
                         isMember = true;
                 if (isMember)
                     throw new NullReferenceException($" {person.Surname} is a member! You can't add {person.Surname} to {NameOfGroup} again!");
                 else
                 {
-                    Person[] oldGroup = new Person[_numberOfMembers];
-                    for (int i = 0; i < _numberOfMembers; i++)
+                    Person[] oldGroup = new Person[NumberOfMembers];
+                    for (int i = 0; i < NumberOfMembers; i++)
                     {
                         oldGroup[i] = group[i];
                     }
-                    _numberOfMembers++;
-                    group = new Person[_numberOfMembers];
-                    for (int i = 0; i < _numberOfMembers - 1; i++)
+                    NumberOfMembers++;
+                    group = new Person[NumberOfMembers];
+                    for (int i = 0; i < NumberOfMembers - 1; i++)
                     {
                         group[i] = oldGroup[i];
                     }
-                    group[_numberOfMembers - 1] = person;
+                    group[NumberOfMembers - 1] = person;
                 }
             }
             else
@@ -83,7 +69,7 @@ namespace FootballFansLib
             {
                 bool isMember = false;
                 int indexOfPerson = 0;
-                for (int i = _numberOfMembers - 1; i >= 0; i--)
+                for (int i = NumberOfMembers - 1; i >= 0; i--)
                     if (group[i] == person)
                     {
                         isMember = true;
@@ -91,19 +77,27 @@ namespace FootballFansLib
                     }
                 if (isMember)
                 {
-                    Person[] oldGroup = new Person[_numberOfMembers];
-                    for (int j = 0; j < _numberOfMembers; j++)
+                    Person[] oldGroup = new Person[NumberOfMembers];
+                    for (int j = 0; j < NumberOfMembers; j++)
                     {
                         oldGroup[j] = group[j];
                     }
-                    _numberOfMembers--;
-                    group = new Person[_numberOfMembers];
-                    for (int j = 0; j < _numberOfMembers + 1; j++)
+                    NumberOfMembers--;
+                    if (NumberOfMembers == 1)
                     {
-                        if (indexOfPerson > j)
-                            group[j] = oldGroup[j];
-                        if (indexOfPerson < j)
-                            group[j - 1] = oldGroup[j];
+                        group = null;
+                        throw new Exception($"Group: {NameOfGroup} is deleted. There are less then 2 person!");
+                    }
+                    else
+                    {
+                        group = new Person[NumberOfMembers];
+                        for (int j = 0; j < NumberOfMembers + 1; j++)
+                        {
+                            if (indexOfPerson > j)
+                                group[j] = oldGroup[j];
+                            if (indexOfPerson < j)
+                                group[j - 1] = oldGroup[j];
+                        }
                     }
                 }
                 else
@@ -111,6 +105,11 @@ namespace FootballFansLib
             }
             else
                 throw new NullReferenceException("You can't create a group of people from nothing!");
+            if (NumberOfMembers == 1)
+            {
+                group = null;
+                throw new NullReferenceException($"Group: {NameOfGroup} is deleted. There are less then 2 person!");
+            }
         }
     }
 }

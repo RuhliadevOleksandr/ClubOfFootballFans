@@ -33,9 +33,9 @@ namespace FootballFansLib
             {
                 club.AddMember(footballFan);
             }
-            catch (NullReferenceException exception)
+            catch (Exception exception)
             {
-                throw new NullReferenceException(exception.Message);
+                throw new Exception(exception.Message);
             }
         }
         public void RemoveFan(FootballFan footballFan)
@@ -44,9 +44,9 @@ namespace FootballFansLib
             {
                 club.RemoveMember(footballFan);
             }
-            catch (NullReferenceException exception)
+            catch (Exception exception)
             {
-                throw new NullReferenceException(exception.Message);
+                throw new Exception(exception.Message);
             }
         }
         public string GetNameOfClub()

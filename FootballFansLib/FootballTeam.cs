@@ -5,11 +5,9 @@ using System.Text;
 
 namespace FootballFansLib
 {
-    public class FootballTeam : IRootable
+    public class FootballTeam
     {
         public int NumberOfAwards { internal set; get; }
-        public string FavouritePlayer { get; set; }
-        public string FavouriteTeam { get; set; }
 
         private Group team;
         public FootballTeam(FootballPlayer[] footballPlayers, string nameFootballTeam)
@@ -34,9 +32,9 @@ namespace FootballFansLib
             {
                 team.AddMember(footballPlayer);
             }
-            catch (NullReferenceException exception)
+            catch (Exception exception)
             {
-                throw new NullReferenceException(exception.Message);
+                throw new Exception(exception.Message);
             }
         }
         public void RemovePlayer(FootballPlayer footballPlayer)
@@ -45,9 +43,9 @@ namespace FootballFansLib
             {
                 team.RemoveMember(footballPlayer);
             }
-            catch (NullReferenceException exception)
+            catch (Exception exception)
             {
-                throw new NullReferenceException(exception.Message);
+                throw new Exception(exception.Message);
             }
         }
         public string GetNameOfTeam()

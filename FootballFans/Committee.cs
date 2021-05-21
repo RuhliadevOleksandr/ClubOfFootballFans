@@ -31,13 +31,14 @@ namespace FootballFans
             }
             return match;
         }
-        internal static void FinishSeason(in Season matchRegister, in FootballTeam[] teamRegister)
+        internal static bool FinishSeason(in Season matchRegister, in FootballTeam[] teamRegister)
         {
             Match.Result[] result = new Match.Result[3];
             result[0] = Match.Result.Win;
             result[1] = Match.Result.Win;
             result[2] = Match.Result.Draw;
             matchRegister.AddResultOfMatch(teamRegister, result);
+            return true;
         }
     }
 }

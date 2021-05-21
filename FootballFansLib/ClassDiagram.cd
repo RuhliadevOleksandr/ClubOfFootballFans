@@ -1,43 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="FootballFansLib.FootballTeam">
-    <Position X="8" Y="0.5" Width="2" />
+    <Position X="8" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAAAAAAQCAEABAAAAAAAAAQAAAAAAgAAAAACAA=</HashCode>
+      <HashCode>AAAAAgAAAAAAQAAEABAAAAAAAAAQAAAAAAgAAAAACAA=</HashCode>
       <FileName>FootballTeam.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="team" />
     </ShowAsAssociation>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FootballFansLib.Person">
-    <Position X="5.25" Y="4" Width="1.5" />
+    <Position X="5.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAEAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Person.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="FootballFansLib.FootballPlayer">
-    <Position X="7.75" Y="4.25" Width="2.25" />
+    <Position X="8" Y="5.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAABAAAAAAAAAAAAAAAAQAA=</HashCode>
       <FileName>FootballPlayer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.192" />
   </Class>
   <Class Name="FootballFansLib.FootballFan">
-    <Position X="2" Y="4" Width="2.5" />
+    <Position X="1.75" Y="5.25" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAQAAAAAAABAAAAAAAAACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>FootballFan.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.208" />
   </Class>
   <Class Name="FootballFansLib.Group">
-    <Position X="5.25" Y="0.5" Width="1.5" />
+    <Position X="4.75" Y="0.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>QAAAQAAAAAAACIAAAACAAAAAAQAgAAAAAABAAAAAAAA=</HashCode>
+      <HashCode>QAAAQAAAAAAACAAAAACAAAAAAQAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Group.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -45,17 +44,18 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="FootballFansLib.FanClub">
-    <Position X="2" Y="0.75" Width="2" />
+    <Position X="1.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAQABAAAAAAAAAAAAAAAQAgIAAAACAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAQABQAAAAAAABAAAAAAQAgIAAAACAAAA=</HashCode>
       <FileName>FanClub.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="club" />
     </ShowAsAssociation>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="FootballFansLib.Match">
-    <Position X="15.25" Y="1.25" Width="1.5" />
+    <Position X="11.25" Y="0.5" Width="2.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -77,9 +77,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="FootballFansLib.Season">
-    <Position X="11" Y="1.75" Width="1.5" />
+    <Position X="11.25" Y="5.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAABAAAAAAAIAAAAgAAAAAAAAAAAAAABAAAAAoAAAAA=</HashCode>
+      <HashCode>AAABAAAAAAAAAAAAgAAAAAAAAAAAAAABAAAAAoAAAAA=</HashCode>
       <FileName>Season.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -87,9 +87,9 @@
     </ShowAsAssociation>
   </Class>
   <Interface Name="FootballFansLib.IRootable">
-    <Position X="11" Y="5" Width="1.5" />
+    <Position X="2" Y="3.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IRootable.cs</FileName>
     </TypeIdentifier>
   </Interface>

@@ -4,19 +4,12 @@ namespace FootballFansLib
 {
     public abstract class Person
     {
-        private string _surname;
-        public string Surname
-        { 
-            get 
-            {
-                return _surname;
-            } 
-        }
+        public string Surname { get; private set; }
         public Person(string surname)
         {
             if (surname != null)
             {
-                _surname = surname;
+                Surname = surname;
             }
             else
                 throw new NullReferenceException("Person must have surname!");

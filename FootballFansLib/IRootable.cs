@@ -2,7 +2,7 @@
 {
     public interface IRootable
     {
-        string FavouritePlayer { set; get; }
-        string FavouriteTeam { set; get; }
+        string FavouritePlayer { get; set; }
+        string FavouriteTeam { get; set; }
     }
 }
