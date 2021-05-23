@@ -2,7 +2,7 @@
 
 namespace FootballFans
 {
-    internal abstract class CaptainsOfFootballTeams
+    internal static class CaptainsOfFootballTeams
     {
         internal static FootballTeam[] CreateTeams()
         {

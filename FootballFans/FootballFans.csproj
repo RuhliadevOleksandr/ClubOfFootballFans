@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="CaptainsOfFootballTeams.cs" />
     <Compile Include="Committee.cs" />
-    <Compile Include="HeadOfFanClub1.cs" />
+    <Compile Include="HeadsOfFanClubs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -3,7 +3,7 @@
 namespace FootballFans
 {
 
-    internal abstract class Committee
+    internal static class Committee
     {
         internal static Season CreateSeason(in FootballTeam[] commands)
         {

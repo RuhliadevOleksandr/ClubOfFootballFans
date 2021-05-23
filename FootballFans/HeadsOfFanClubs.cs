@@ -3,7 +3,7 @@ using FootballFansLib;
 
 namespace FootballFans
 {
-    internal abstract class HeadOfFanClub
+    internal static class HeadOfFanClub
     {
         internal static FanClub[] CreateFanClubs()
         {
