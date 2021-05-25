@@ -1,44 +1,48 @@
 ﻿using System;
+using System.IO;
 using FootballFansLib;
 
 namespace FootballFans
 {
     internal static class HeadOfFanClub
     {
-        internal static FanClub[] CreateFanClubs()
+        internal static FanClub[] CreateFanClubs(string textName)
         {
-            FanClub[] clubs = new FanClub[3];
+            int stringIndex = 0;
+            string[] text = File.ReadAllLines(textName);
 
-            FootballFan[] club = new FootballFan[3];
-            club[0] = new FootballFan("Patterson");
-            club[1] = new FootballFan("Cortez");
-            club[2] = new FootballFan("Glass");
-            clubs[0] = new FanClub(club, "Barcelona fans");
-            clubs[0].FavouriteTeam = "Barcelona";
-            clubs[0].FavouritePlayer = "Messi";
-
-            FootballFan[] club2 = new FootballFan[3];
-            club2[0] = new FootballFan("Holland");
-            club2[1] = new FootballFan("Oconnell");
-            club2[2] = new FootballFan("Mclean");
-            clubs[1] = new FanClub(club2, "Chelsea fans");
-            clubs[1].FavouriteTeam = "Chelsea";
-            clubs[1].FavouritePlayer = "Verner";
-
-            FootballFan[] club3 = new FootballFan[3];
-            club3[0] = new FootballFan("Page");
-            club3[1] = new FootballFan("Henderson");
-            club3[2] = new FootballFan("Dalton");
-            clubs[2] = new FanClub(club3, "Liverpool fans");
-            clubs[2].FavouriteTeam = "Liverpool";
-            clubs[2].FavouritePlayer = "Milner";
+            int numberOfFanClubs= Int32.Parse(Program.CutText(text, ref stringIndex));
+            FanClub[] clubs = new FanClub[numberOfFanClubs];
+            for (int i = 0; i < numberOfFanClubs; i++)
+            {
+                stringIndex++;
+                if (stringIndex < text.Length && !String.IsNullOrEmpty(text[stringIndex]))
+                {
+                    string nameOfClub = Program.CutText(text, ref stringIndex);
+                    string favouriteTeam = Program.CutText(text, ref stringIndex);
+                    string favouritePlayer = Program.CutText(text, ref stringIndex);
+                    int numberOfMembers = Int32.Parse(Program.CutText(text, ref stringIndex));
+                    FootballFan[] group = new FootballFan[numberOfMembers];
+                    for (int k = 0; k < numberOfMembers; k++)
+                        group[k] = new FootballFan(Program.CutText(text, ref stringIndex))
+                        { 
+                            FavouritePlayer = favouritePlayer, 
+                            FavouriteTeam = favouriteTeam 
+                        };
+                    clubs[i] = new FanClub(group, nameOfClub)
+                    {
+                        FavouritePlayer = favouritePlayer,
+                        FavouriteTeam = favouriteTeam
+                    };
+                }
+                else
+                    stringIndex++;
+            }
 
             return clubs;
         }
         private static FanClub CreateFanClub()
         {
-            Console.Write("\nEnter the name of fan club: ");
-            string nameOfFanClub = Console.ReadLine();
             bool isParsed = false;
             FanClub club = null;
             while (!isParsed)
@@ -47,23 +51,51 @@ namespace FootballFans
                 isParsed = Int32.TryParse(Console.ReadLine(), out int numberOfMembers);
                 if (isParsed && numberOfMembers > 1)
                 {
-                    Console.Write("\nEnter the favourite player: ");
-                    string favouritePlayer = Console.ReadLine();
-                    Console.Write("\nEnter the favourite team: ");
-                    string favouriteTeam = Console.ReadLine();
-                    FootballFan[] footballFans = new FootballFan[numberOfMembers];
-                    for (int i = 0; i < numberOfMembers; i++)
+                    try
                     {
-                        Console.Write($"\nEnter the surname of {i + 1} fan: ");
-                        string surname = Console.ReadLine();
-                        footballFans[i] = new FootballFan(surname);
+                        FootballFan[] footballFans = new FootballFan[numberOfMembers];
+                        for (int i = 0; i < numberOfMembers; i++)
+                        {
+                            Console.Write($"\nEnter the surname of {i + 1} fan: ");
+                            string surname = Console.ReadLine();
+                            footballFans[i] = new FootballFan(surname);
+                        }
+                        Console.Write("\nEnter the name of fan club: ");
+                        club = new FanClub(footballFans, Console.ReadLine());
+                        Console.Write("\nEnter the favourite player: ");
+                        club.FavouritePlayer = Console.ReadLine();
+                        Console.Write("\nEnter the favourite team: ");
+                        club.FavouriteTeam = Console.ReadLine();
                     }
-                    club = new FanClub(footballFans, nameOfFanClub);
-                    club.FavouritePlayer = favouritePlayer;
-                    club.FavouriteTeam = favouriteTeam;
+                    catch (SystemException exception)
+                    {
+                        Console.WriteLine(exception.Message); ;
+                        isParsed = false;
+                    }
+                    catch(Exception exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                        try
+                        {
+                            Console.Write("\nEnter the favourite team: ");
+                            club.FavouriteTeam = Console.ReadLine();
+                        }
+                        catch (SystemException exception2)
+                        {
+                            Console.WriteLine(exception2.Message); ;
+                            isParsed = false;
+                        }
+                        catch (Exception exception2)
+                        {
+                            Console.WriteLine(exception2.Message);
+                        }
+                    }
                 }
                 else
+                {
                     Console.WriteLine("\nThe number of fan club members must be integer and more than one!");
+                    isParsed = false;
+                }
             }
             return club;
         }

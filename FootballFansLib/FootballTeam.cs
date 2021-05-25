@@ -17,9 +17,13 @@ namespace FootballFansLib
                 team = new Group(footballPlayers, nameFootballTeam);
                 NumberOfAwards = 0;
             }
-            catch (NullReferenceException message)
+            catch (NullReferenceException exception)
             {
-                throw new NullReferenceException(message.ToString());
+                throw new NullReferenceException(exception.Message);
+            }
+            catch (ArgumentException exception)
+            {
+                throw new ArgumentException(exception.Message);
             }
         }
         public string[] GetSurnamesOfTeam()

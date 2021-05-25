@@ -2,7 +2,6 @@
 
 namespace FootballFans
 {
-
     internal static class Committee
     {
         internal static Season CreateSeason(in FootballTeam[] commands)
@@ -14,7 +13,7 @@ namespace FootballFans
             Season season = new Season(matches);
             return season;
         }
-        internal static Match CreateMatch(Match.Types type, in FootballTeam[] commands)
+        private static Match CreateMatch(Match.Types type, in FootballTeam[] commands)
         {
             Match match = null;
             switch (type)

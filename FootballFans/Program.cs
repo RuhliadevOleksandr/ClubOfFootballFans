@@ -7,11 +7,25 @@ namespace FootballFans
     {
         static void Main(string[] args)
         {
-            Console.Write("\nEnter surname: ");
-            string userSurname = Console.ReadLine();
-            FootballFan user = new FootballFan(userSurname);
-            FanClub[] fanClubs = HeadOfFanClub.CreateFanClubs();
-            FootballTeam[] teamRegister = CaptainsOfFootballTeams.CreateTeams();
+            FootballFan user = null;
+            bool isCorrectSurname = false;
+            while (!isCorrectSurname)
+            {
+                try
+                {
+                    Console.Write("\nEnter surname: ");
+                    string userName = Console.ReadLine();
+                    user = new FootballFan(userName);
+                    Console.WriteLine($"\nWelcome, {userName}");
+                    isCorrectSurname = true;
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
+            }
+            FanClub[] fanClubs = HeadOfFanClub.CreateFanClubs("FanClubs.txt");
+            FootballTeam[] teamRegister = CaptainsOfFootballTeams.CreateTeams("FootballTeams.txt");
             Season matchRegister = Committee.CreateSeason(in teamRegister);
             bool isSeasonFinished = Committee.FinishSeason(in matchRegister, in teamRegister);
             bool isWorking = true;
@@ -28,31 +42,37 @@ namespace FootballFans
                             isWorking = false;
                             break;
                         case 1:
+                            Console.WriteLine("\nYou have choosed the 1 point");
                             HeadOfFanClub.AddFanClub(ref fanClubs, user);
                             break;
                         case 2:
+                            Console.WriteLine("\nYou have choosed the 2 point");
                             ShowFanClubs(fanClubs);
                             HeadOfFanClub.JoinAFanClub(ref fanClubs, user);
                             break;
                         case 3:
+                            Console.WriteLine("\nYou have choosed the 3 point");
                             if (fanClubs != null)
                                 ShowFanClubs(in fanClubs);
                             else
                                 Console.WriteLine("\nNo fan club created yet!");
                             break;
                         case 4:
+                            Console.WriteLine("\nYou have choosed the 4 point");
                             if (teamRegister != null)
                                 ShowTeamRegister(in teamRegister);
                             else
                                 Console.WriteLine("\nTeams register isn't formed!");
                             break;
                         case 5:
+                            Console.WriteLine("\nYou have choosed the 5 point");
                             if (matchRegister != null)
                                 ShowMatchRegister(in matchRegister);
                             else
                                 Console.WriteLine("\nMatches register isn't formed!");
                             break;
                         case 6:
+                            Console.WriteLine("\nYou have choosed the 6 point");
                             if (isSeasonFinished)
                                 ShowResultOfSeason(in matchRegister, in teamRegister);
                             else
@@ -147,6 +167,14 @@ namespace FootballFans
                 Console.WriteLine(teamRegister[j].NumberOfAwards);
             }
             Console.WriteLine("\n========================================\n");
+        }
+        internal static string CutText(string[] text, ref int stringIndex)
+        {
+            string result = "";
+            for (int i = text[stringIndex].IndexOf(": ") + 2; i < text[stringIndex].Length; i++)
+                result += text[stringIndex][i];
+            stringIndex++;
+            return result;
         }
     }
 }

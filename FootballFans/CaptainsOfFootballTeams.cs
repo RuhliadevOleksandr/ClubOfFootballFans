@@ -1,31 +1,33 @@
-﻿using FootballFansLib;
+﻿using System;
+using System.IO;
+using FootballFansLib;
 
 namespace FootballFans
 {
     internal static class CaptainsOfFootballTeams
     {
-        internal static FootballTeam[] CreateTeams()
+        internal static FootballTeam[] CreateTeams(string textName)
         {
-            FootballTeam[] teams = new FootballTeam[3];
+            int stringIndex = 0;
+            string[] text = File.ReadAllLines(textName);
 
-            FootballPlayer[] team = new FootballPlayer[3];
-            team[0] = new FootballPlayer("Griezmann", 10);
-            team[1] = new FootballPlayer("Braithwaite", 12);
-            team[2] = new FootballPlayer("Messi", 19);
-            teams[0] = new FootballTeam(team, "Barcelona");
-
-            FootballPlayer[] team2 = new FootballPlayer[3];
-            team2[0] = new FootballPlayer("Pedro");
-            team2[1] = new FootballPlayer("Verner", 5);
-            team2[2] = new FootballPlayer("Mount", 17);
-            teams[1] = new FootballTeam(team2, "Chelsea");
-
-            FootballPlayer[] team3 = new FootballPlayer[3];
-            team3[0] = new FootballPlayer("Gerrard", 7);
-            team3[1] = new FootballPlayer("Henderson");
-            team3[2] = new FootballPlayer("Milner", 13);
-            teams[2] = new FootballTeam(team3, "Liverpool");
-
+            int numberOfFootballTeams = Int32.Parse(Program.CutText(text, ref stringIndex));
+            FootballTeam[] teams = new FootballTeam[numberOfFootballTeams];
+            for (int i = 0; i < numberOfFootballTeams; i++)
+            {
+                stringIndex++;
+                if (stringIndex < text.Length && !String.IsNullOrEmpty(text[stringIndex]))
+                {
+                    string nameOfTeam = Program.CutText(text, ref stringIndex);
+                    int numberOfMembers = Int32.Parse(Program.CutText(text, ref stringIndex));
+                    FootballPlayer[] group = new FootballPlayer[numberOfMembers];
+                    for (int k = 0; k < numberOfMembers; k++)
+                        group[k] = new FootballPlayer(Program.CutText(text, ref stringIndex));
+                    teams[i] = new FootballTeam(group, nameOfTeam);
+                }
+                else
+                    stringIndex++;
+            }
             return teams;
         }
     }

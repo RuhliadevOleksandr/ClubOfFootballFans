@@ -18,7 +18,21 @@ namespace FootballFansLib
                     group[i] = people[i];
                 }
                 if (nameOfGroup != null)
-                    NameOfGroup = nameOfGroup;
+                {
+                    bool isCorrectName = true;
+                    if (nameOfGroup == "")
+                        throw new ArgumentException("\nName of group must have letters!");
+                    else
+                    {
+                        for (int i = 0; i < nameOfGroup.Length; i++)
+                            if (!Char.IsLetter(nameOfGroup[i]) && !Char.IsSeparator(nameOfGroup[i]))
+                                isCorrectName = false;
+                    }
+                    if (isCorrectName)
+                        NameOfGroup = nameOfGroup;
+                    else
+                        throw new ArgumentException("\nName of group must have only letters!");
+                }
                 else
                     throw new NullReferenceException("Group must have name!");
             }
