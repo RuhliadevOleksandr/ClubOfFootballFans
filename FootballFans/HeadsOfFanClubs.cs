@@ -1,46 +1,10 @@
 ﻿using System;
-using System.IO;
 using FootballFansLib;
 
 namespace FootballFans
 {
     internal static class HeadOfFanClub
     {
-        internal static FanClub[] CreateFanClubs(string textName)
-        {
-            int stringIndex = 0;
-            string[] text = File.ReadAllLines(textName);
-
-            int numberOfFanClubs= Int32.Parse(Program.CutText(text, ref stringIndex));
-            FanClub[] clubs = new FanClub[numberOfFanClubs];
-            for (int i = 0; i < numberOfFanClubs; i++)
-            {
-                stringIndex++;
-                if (stringIndex < text.Length && !String.IsNullOrEmpty(text[stringIndex]))
-                {
-                    string nameOfClub = Program.CutText(text, ref stringIndex);
-                    string favouriteTeam = Program.CutText(text, ref stringIndex);
-                    string favouritePlayer = Program.CutText(text, ref stringIndex);
-                    int numberOfMembers = Int32.Parse(Program.CutText(text, ref stringIndex));
-                    FootballFan[] group = new FootballFan[numberOfMembers];
-                    for (int k = 0; k < numberOfMembers; k++)
-                        group[k] = new FootballFan(Program.CutText(text, ref stringIndex))
-                        { 
-                            FavouritePlayer = favouritePlayer, 
-                            FavouriteTeam = favouriteTeam 
-                        };
-                    clubs[i] = new FanClub(group, nameOfClub)
-                    {
-                        FavouritePlayer = favouritePlayer,
-                        FavouriteTeam = favouriteTeam
-                    };
-                }
-                else
-                    stringIndex++;
-            }
-
-            return clubs;
-        }
         private static FanClub CreateFanClub()
         {
             bool isParsed = false;
@@ -116,7 +80,7 @@ namespace FootballFans
                     fanClubs[i] = oldFanclubs[i];
                 }
                 fanClubs[numberOfFanClubs - 1] = CreateFanClub(); 
-                CheckMemberInOther(ref fanClubs, footballFan);
+                CheckIfMemberInOther(ref fanClubs, footballFan);
                 fanClubs[numberOfFanClubs - 1].AddFan(footballFan);
                 Console.WriteLine($"\nYou have join the {fanClubs[numberOfFanClubs - 1].GetNameOfClub()}");
             }
@@ -124,12 +88,12 @@ namespace FootballFans
             {
                 fanClubs = new FanClub[1];
                 fanClubs[0] = CreateFanClub();
-                CheckMemberInOther(ref fanClubs, footballFan);
+                CheckIfMemberInOther(ref fanClubs, footballFan);
                 fanClubs[0].AddFan(footballFan); 
                 Console.WriteLine($"\nYou have join the {fanClubs[0].GetNameOfClub()}");
             }
         }
-        private static void CheckMemberInOther(ref FanClub[] fanClubs, FootballFan footballFan)
+        private static void CheckIfMemberInOther(ref FanClub[] fanClubs, FootballFan footballFan)
         {
             for (int i = 0; i < fanClubs.Length; i++)
             {
@@ -150,7 +114,7 @@ namespace FootballFans
             if (fanClubs != null)
             {
                 bool isChoose = false;
-                CheckMemberInOther(ref fanClubs, footballFan);
+                CheckIfMemberInOther(ref fanClubs, footballFan);
                 while (!isChoose)
                 {
                     Console.Write("\nEnter name one of the club you wish to join: ");

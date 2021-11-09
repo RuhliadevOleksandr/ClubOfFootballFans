@@ -24,8 +24,8 @@ namespace FootballFans
                     Console.WriteLine(exception.Message);
                 }
             }
-            FanClub[] fanClubs = HeadOfFanClub.CreateFanClubs("FanClubs.txt");
-            FootballTeam[] teamRegister = CaptainsOfFootballTeams.CreateTeams("FootballTeams.txt");
+            FanClub[] fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
+            FootballTeam[] teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
             Season matchRegister = Committee.CreateSeason(in teamRegister);
             bool isSeasonFinished = Committee.FinishSeason(in matchRegister, in teamRegister);
             bool isWorking = true;
@@ -167,14 +167,6 @@ namespace FootballFans
                 Console.WriteLine(teamRegister[j].NumberOfAwards);
             }
             Console.WriteLine("\n========================================\n");
-        }
-        internal static string CutText(string[] text, ref int stringIndex)
-        {
-            string result = "";
-            for (int i = text[stringIndex].IndexOf(": ") + 2; i < text[stringIndex].Length; i++)
-                result += text[stringIndex][i];
-            stringIndex++;
-            return result;
         }
     }
 }
