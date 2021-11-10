@@ -9,13 +9,8 @@ namespace FootballFans
         static void Main(string[] args)
         {
             FootballFan user = AddUser();
-            FanClub[] fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
-            FootballTeam[] teams = DataFromFile.CreateTeams("FootballTeams.txt");
-            List<FootballTeam> teamRegister = new List<FootballTeam>();
-            foreach (FootballTeam team in teams)
-	        {
-                teamRegister.Add(team);
-	        }
+            List<FanClub> fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
+            List<FootballTeam> teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
             List<FootballTeam> stageParticipants = new List<FootballTeam>(teamRegister);
             int stage = Committee.GetNumberOfStages(in stageParticipants);
             List<Season> matchRegister = new List<Season>();
@@ -148,30 +143,29 @@ namespace FootballFans
             Console.WriteLine(" Enter 9 - to show result of season");
             Console.WriteLine("\n========================================\n");
         }
-        static void ShowFanClubs(in FanClub[] fanClubs)
+        static void ShowFanClubs(in List<FanClub> fanClubs)
         {
             Console.WriteLine("\n========================================\n");
             Console.WriteLine("Fan clubs:");
-            int numberOfFunClubs = fanClubs.Length;
-            for (int i = 0; i < numberOfFunClubs; i++)
-            {
-                Console.WriteLine($"\nFan club: {fanClubs[i].GetNameOfClub()}");
-                if (fanClubs[i].FavouritePlayer != null)
+            foreach (var fanClub in fanClubs)
+	        {
+                Console.WriteLine($"\nFan club: {fanClub.GetNameOfClub()}");
+                if (fanClub.FavouritePlayer != null)
                 {
                     Console.Write("Favourite player: ");
-                    Console.WriteLine(fanClubs[i].FavouritePlayer);
+                    Console.WriteLine(fanClub.FavouritePlayer);
                 }
-                if (fanClubs[i].FavouriteTeam != null)
+                if (fanClub.FavouriteTeam != null)
                 {
                     Console.Write("Favourite team: ");
-                    Console.WriteLine(fanClubs[i].FavouriteTeam);
+                    Console.WriteLine(fanClub.FavouriteTeam);
                 }
-                int numberOfMembers = fanClubs[i].GetNumberOfMembers();
-                string[] surnames = fanClubs[i].GetSurnamesOfClub();
+                int numberOfMembers = fanClub.GetNumberOfMembers();
+                string[] surnames = fanClub.GetSurnamesOfClub();
                 for (int j = 0; j < numberOfMembers; j++)
                 {
                     Console.WriteLine($"Member {j + 1} : {surnames[j]}");
-                }
+                }    
             }
             Console.WriteLine("\n========================================\n");
 

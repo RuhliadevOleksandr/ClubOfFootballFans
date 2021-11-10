@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using FootballFansLib;
+using System.Collections.Generic;
 
 namespace FootballFans
 {
@@ -14,13 +15,13 @@ namespace FootballFans
             stringIndex++;
             return result;
         }
-        internal static FanClub[] CreateFanClubs(string textName)
+        internal static List<FanClub> CreateFanClubs(string textName)
         {
             int stringIndex = 0;
             string[] text = File.ReadAllLines(textName);
 
             int numberOfFanClubs = Int32.Parse(CutText(text, ref stringIndex));
-            FanClub[] clubs = new FanClub[numberOfFanClubs];
+            List<FanClub> clubs = new List<FanClub>();
             for (int i = 0; i < numberOfFanClubs; i++)
             {
                 stringIndex++;
@@ -30,18 +31,18 @@ namespace FootballFans
                     string favouriteTeam = CutText(text, ref stringIndex);
                     string favouritePlayer = CutText(text, ref stringIndex);
                     int numberOfMembers = Int32.Parse(CutText(text, ref stringIndex));
-                    FootballFan[] group = new FootballFan[numberOfMembers];
+                    List<FootballFan> group = new List<FootballFan>();
                     for (int k = 0; k < numberOfMembers; k++)
-                        group[k] = new FootballFan(CutText(text, ref stringIndex))
+                        group.Add(new FootballFan(CutText(text, ref stringIndex))
                         {
                             FavouritePlayer = favouritePlayer,
                             FavouriteTeam = favouriteTeam
-                        };
-                    clubs[i] = new FanClub(group, nameOfClub)
+                        });
+                    clubs.Add(new FanClub(group.ToArray(), nameOfClub)
                     {
                         FavouritePlayer = favouritePlayer,
                         FavouriteTeam = favouriteTeam
-                    };
+                    });
                 }
                 else
                     stringIndex++;
@@ -49,13 +50,13 @@ namespace FootballFans
 
             return clubs;
         }
-        internal static FootballTeam[] CreateTeams(string textName)
+        internal static List<FootballTeam> CreateTeams(string textName)
         {
             int stringIndex = 0;
             string[] text = File.ReadAllLines(textName);
 
             int numberOfFootballTeams = Int32.Parse(CutText(text, ref stringIndex));
-            FootballTeam[] teams = new FootballTeam[numberOfFootballTeams];
+            List<FootballTeam> teams = new List<FootballTeam>();
             for (int i = 0; i < numberOfFootballTeams; i++)
             {
                 stringIndex++;
@@ -63,10 +64,10 @@ namespace FootballFans
                 {
                     string nameOfTeam = CutText(text, ref stringIndex);
                     int numberOfMembers = Int32.Parse(CutText(text, ref stringIndex));
-                    FootballPlayer[] group = new FootballPlayer[numberOfMembers];
+                    List<FootballPlayer> group = new List<FootballPlayer>();
                     for (int k = 0; k < numberOfMembers; k++)
-                        group[k] = new FootballPlayer(CutText(text, ref stringIndex));
-                    teams[i] = new FootballTeam(group, nameOfTeam);
+                        group.Add(new FootballPlayer(CutText(text, ref stringIndex)));
+                    teams.Add(new FootballTeam(group.ToArray(), nameOfTeam));
                 }
                 else
                     stringIndex++;
