@@ -1,5 +1,6 @@
 ﻿using System;
 using FootballFansLib;
+using System.Collections.Generic;
 
 namespace FootballFans
 {
@@ -7,34 +8,28 @@ namespace FootballFans
     {
         static void Main(string[] args)
         {
-            FootballFan user = null;
-            bool isCorrectSurname = false;
-            while (!isCorrectSurname)
-            {
-                try
-                {
-                    Console.Write("\nEnter surname: ");
-                    string userName = Console.ReadLine();
-                    user = new FootballFan(userName);
-                    Console.WriteLine($"\nWelcome, {userName}");
-                    isCorrectSurname = true;
-                }
-                catch(Exception exception)
-                {
-                    Console.WriteLine(exception.Message);
-                }
-            }
+            FootballFan user = AddUser();
             FanClub[] fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
-            FootballTeam[] teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
-            Season matchRegister = Committee.CreateSeason(in teamRegister);
-            bool isSeasonFinished = Committee.FinishSeason(in matchRegister, in teamRegister);
+            FootballTeam[] teams = DataFromFile.CreateTeams("FootballTeams.txt");
+            List<FootballTeam> teamRegister = new List<FootballTeam>();
+            foreach (FootballTeam team in teams)
+	        {
+                teamRegister.Add(team);
+	        }
+            List<FootballTeam> stageParticipants = new List<FootballTeam>(teamRegister);
+            int stage = Committee.GetNumberOfStages(in stageParticipants);
+            List<Season> matchRegister = new List<Season>();
+            Season stageMatches = Committee.CreateStage(in stageParticipants);
+            matchRegister.Add(stageMatches);
+            int currentStage = Committee.FinishStage(in stageMatches, in stageParticipants);
+
             bool isWorking = true;
             while (isWorking)
             {
                 ShowMenu();
                 Console.Write("Choose one point of the list: ");
                 bool isParsed = Int32.TryParse(Console.ReadLine(), out int choise);
-                if (choise <= 6 && choise >= 0 && isParsed)
+                if (choise <= 9 && choise >= 0 && isParsed)
                 {
                     switch (choise)
                     {
@@ -66,23 +61,77 @@ namespace FootballFans
                             break;
                         case 5:
                             Console.WriteLine("\nYou have choosed the 5 point");
-                            if (matchRegister != null)
-                                ShowMatchRegister(in matchRegister);
+                            if (stageMatches != null)
+                                ShowMatches(in stageMatches);
                             else
-                                Console.WriteLine("\nMatches register isn't formed!");
+                                Console.WriteLine("\nStage matches isn't formed!");
                             break;
                         case 6:
                             Console.WriteLine("\nYou have choosed the 6 point");
-                            if (isSeasonFinished)
-                                ShowResultOfSeason(in matchRegister, in teamRegister);
+                            if (Convert.ToBoolean(currentStage))
+                                ShowResultOfMatches(in stageParticipants);
                             else
-                                Console.WriteLine("\nNo season finished yet!");
+                                Console.WriteLine("\nNo stage finished yet!");
+                            break;
+                        case 7:
+                            Console.WriteLine("\nYou have choosed the 7 point");
+                            if (currentStage != stage)
+                            {
+                                Committee.QualifyCommands(ref stageParticipants, stageParticipants.Count / 2);
+                                stageMatches = Committee.CreateStage(in stageParticipants);
+                                matchRegister.Add(stageMatches);
+                                currentStage += Committee.FinishStage(in stageMatches, in stageParticipants);
+                                ShowMatches(in stageMatches);
+                            }
+                            else
+                                Console.WriteLine("\nThat was the last stage!");
+                            break;
+                        case 8:
+                            Console.WriteLine("\nYou have choosed the 8 point");
+                            if (currentStage == stage)
+                                foreach (Season matches in matchRegister)
+			                    {
+                                    ShowMatches(in matches);
+			                    }
+                            else
+                                Console.WriteLine("\nSeason isn't finished yet! Please choose: \"to show matches of next stage\"");
+                            break;
+                        case 9:
+                            Console.WriteLine("\nYou have choosed the 9 point");
+                            if (currentStage == stage)
+                            {
+                                teamRegister.Sort((team, team2) => team2.NumberOfAwards.CompareTo(team.NumberOfAwards));
+                                ShowResultOfMatches(in teamRegister);
+                            }
+                            else
+                                Console.WriteLine("\nSeason isn't finished yet! Please choose: \"to show matches of next stage\"");
                             break;
                     }
                 }
                 else
                     Console.WriteLine("\nThere isn't such point! Please try again\n");
             }
+        }
+        static FootballFan AddUser()
+        {
+            FootballFan user = null;
+            bool isCorrectSurname = false;
+            while (!isCorrectSurname)
+            {
+                try
+                {
+                    Console.Write("\nEnter surname: ");
+                    string userName = Console.ReadLine();
+                    user = new FootballFan(userName);
+                    Console.WriteLine($"\nWelcome, {userName}");
+                    isCorrectSurname = true;
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
+            }
+            return user;
         }
         static void ShowMenu()
         {
@@ -91,9 +140,12 @@ namespace FootballFans
             Console.WriteLine(" Enter 1 - to create fan club");
             Console.WriteLine(" Enter 2 - to join fan club");
             Console.WriteLine(" Enter 3 - to show fan clubs");
-            Console.WriteLine(" Enter 4 - to show command register");
-            Console.WriteLine(" Enter 5 - to show match register");
-            Console.WriteLine(" Enter 6 - to show result of season");
+            Console.WriteLine(" Enter 4 - to show team register");
+            Console.WriteLine(" Enter 5 - to show matches of current stage");
+            Console.WriteLine(" Enter 6 - to show result of current stage");
+            Console.WriteLine(" Enter 7 - to show matches of next stage");
+            Console.WriteLine(" Enter 8 - to show matches of season");
+            Console.WriteLine(" Enter 9 - to show result of season");
             Console.WriteLine("\n========================================\n");
         }
         static void ShowFanClubs(in FanClub[] fanClubs)
@@ -124,24 +176,23 @@ namespace FootballFans
             Console.WriteLine("\n========================================\n");
 
         }
-        static void ShowTeamRegister(in FootballTeam[] teamRegister)
+        static void ShowTeamRegister(in List<FootballTeam> commands)
         {
             Console.WriteLine("\n========================================\n");
             Console.WriteLine("Register of teams:");
-            int numberOfTeams = teamRegister.Length;
-            for (int i = 0; i < numberOfTeams; i++)
-            {
-                Console.WriteLine($"\n{teamRegister[i].GetNameOfTeam()}:");
-                int numberOfMembers = teamRegister[i].GetNumberOfMembers();
-                string[] surnames = teamRegister[i].GetSurnamesOfTeam();
+            foreach (FootballTeam command in commands)
+	        {
+                Console.WriteLine($"\n{command.GetNameOfTeam()}:");
+                int numberOfMembers = command.GetNumberOfMembers();
+                string[] surnames = command.GetSurnamesOfTeam();
                 for (int j = 0; j < numberOfMembers; j++)
                 {
                     Console.WriteLine($"Surname: {surnames[j]}");
                 }
-            }
+        	}
             Console.WriteLine("\n========================================\n");
         }
-        static void ShowMatchRegister(in Season matchRegister)
+        static void ShowMatches(in Season matchRegister)
         {
             Console.WriteLine("\n========================================\n");
             Console.WriteLine("Register of matches:");
@@ -156,16 +207,15 @@ namespace FootballFans
             }
             Console.WriteLine("\n========================================\n");
         }
-        static void ShowResultOfSeason(in Season matchRegister, in FootballTeam[] teamRegister)
+        static void ShowResultOfMatches(in List<FootballTeam> commands)
         {
             Console.WriteLine("\n========================================\n");
             Console.WriteLine("Result of matches(number of awards):");
-            int numberOfTeams = matchRegister.NumberOfMatches;
-            for (int j = 0; j < numberOfTeams; j++)
-            {
-                Console.Write($"\n{teamRegister[j].GetNameOfTeam()} :");
-                Console.WriteLine(teamRegister[j].NumberOfAwards);
-            }
+            foreach (FootballTeam command in commands)
+	        {
+                Console.Write($"\n{command.GetNameOfTeam()}: ");
+                Console.WriteLine(command.NumberOfAwards);
+        	}
             Console.WriteLine("\n========================================\n");
         }
     }
