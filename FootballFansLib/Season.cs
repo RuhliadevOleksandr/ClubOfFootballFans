@@ -8,6 +8,13 @@ namespace FootballFansLib
     public class Season
     {
         public int NumberOfMatches { get; private set; }
+        public Match this[int index]
+        {
+            get
+            {
+                return season[index];
+            }
+        }
         private Match[] season;
         public Season(Match[] matches)
         {
