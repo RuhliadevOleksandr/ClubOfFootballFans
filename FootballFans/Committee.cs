@@ -74,7 +74,7 @@ namespace FootballFans
             copyCommands.Remove(firstTeam);
             FootballTeam secondTeam = copyCommands[new Random().Next(copyCommands.Count)];
             copyCommands.Remove(secondTeam);
-            Match match = new Match(firstTeam, secondTeam, dateTime.ToString(), type);
+            Match match = new Match(firstTeam, secondTeam, dateTime, type);
             return match;
         }
         private static List<int> RandomList(int length, int minValue, int maxValue)

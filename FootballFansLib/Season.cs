@@ -30,15 +30,6 @@ namespace FootballFansLib
             else
                 throw new NullReferenceException("You can't create a season from nothing!");
         }
-        public string[] GetDatesOfTheMatches() 
-        {
-            string[] datesOfTheMatches = new string[NumberOfMatches];
-            for (int i = 0; i < NumberOfMatches; i++)
-            {
-                datesOfTheMatches[i] = season[i].DateOfTheMatch;
-            }
-            return datesOfTheMatches;
-        }
         public string[][] MembersOfTheMatches() 
         {
             string[][] membersOfTheMatches = new string[2][];

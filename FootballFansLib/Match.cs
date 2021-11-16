@@ -9,10 +9,10 @@ namespace FootballFansLib
     {
         public enum Types { ChampionsLeague, EuropaLeague, EURO }
         public Types TypeOfMatch { private set; get; }
-        public string DateOfTheMatch { private set; get; }
+        public DateTime DateOfTheMatch { private set; get; }
         public string[] MembersOfTheMatch { private set; get; }
         public enum Result { Win, Draw, Lose }
-        public Match(FootballTeam team, FootballTeam team2, string dateOfTheMatch, Types type)
+        public Match(FootballTeam team, FootballTeam team2, DateTime dateOfTheMatch, Types type)
         {
             if (dateOfTheMatch != null)
             {
