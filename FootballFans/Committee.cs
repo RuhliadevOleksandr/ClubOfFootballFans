@@ -6,10 +6,10 @@ namespace FootballFans
 {
     internal static class Committee
     {
-        internal static List<Season> CreateSeason(in List<FootballTeam> commands)
+        internal static List<Season> CreateSeason(in List<FootballTeam> commands, Match.Types type)
         {
             List<Season> matchRegister = new List<Season>();
-            Season stage = CreateStage(in commands);
+            Season stage = CreateStage(in commands, type);
             matchRegister.Add(stage);
             FinishStage(in stage, in commands);
             return matchRegister;
@@ -46,14 +46,14 @@ namespace FootballFans
                 throw new ArgumentException("\nNumber of commands must be more than 1!");
             }
         }
-        internal static Season CreateStage(in List<FootballTeam> commands)
+        internal static Season CreateStage(in List<FootballTeam> commands, Match.Types type)
         {
             List<FootballTeam> copyCommands = new List<FootballTeam>(commands);
             List<DateTime> dateTimes = RandomDateList(commands.Count / 2);
             Match[] stage = new Match[commands.Count / 2];
             for (int i = 0; i < commands.Count / 2; i++)
 			{
-                stage[i] = CreateMatch(ref copyCommands, dateTimes[i]);
+                stage[i] = CreateMatch(ref copyCommands, dateTimes[i], type);
 			}
             Season season = new Season(stage);
             return season;
@@ -68,13 +68,13 @@ namespace FootballFans
 			}
             matches.AddResultOfMatch(commands.ToArray(), result);
         }
-        private static Match CreateMatch(ref List<FootballTeam> copyCommands, DateTime dateTime)
+        private static Match CreateMatch(ref List<FootballTeam> copyCommands, DateTime dateTime, Match.Types type)
         {
             FootballTeam firstTeam = copyCommands[new Random().Next(copyCommands.Count)];
             copyCommands.Remove(firstTeam);
             FootballTeam secondTeam = copyCommands[new Random().Next(copyCommands.Count)];
             copyCommands.Remove(secondTeam);
-            Match match = new Match(firstTeam, secondTeam, dateTime.ToString());
+            Match match = new Match(firstTeam, secondTeam, dateTime.ToString(), type);
             return match;
         }
         private static List<int> RandomList(int length, int minValue, int maxValue)

@@ -11,7 +11,8 @@ namespace FootballFans
             FootballFan user = AddUser();
             List<FanClub> fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
             List<FootballTeam> teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
-            List<Season> matchRegister = Committee.CreateSeason(in teamRegister);
+            Match.Types type = Match.Types.ChampionsLeague;
+            List<Season> matchRegister = Committee.CreateSeason(in teamRegister, type);
             int numberOfStages = Committee.GetNumberOfStages(in teamRegister);
             int currentStage = 1;
 
@@ -71,7 +72,7 @@ namespace FootballFans
 	                        {
                                 List<FootballTeam> participants = GetParticipants(in matchRegister, currentStage, teamRegister);
                                 Committee.QualifyCommands(ref participants);
-                                matchRegister.Add(Committee.CreateStage(in participants));
+                                matchRegister.Add(Committee.CreateStage(in participants, type));
                                 currentStage++;
                                 Season stage = matchRegister[currentStage - 1];
                                 Committee.FinishStage(in stage, in participants);
@@ -205,9 +206,10 @@ namespace FootballFans
         static void ShowMatches(in List<Season> matchRegister, int currentStage)
         {
             Console.WriteLine("\n========================================\n");
+            Console.WriteLine($"Register of matches of {matchRegister[0][0].TypeOfMatch}!");
             if(currentStage < matchRegister.Count + 1)
             {
-                Console.WriteLine($"Register of matches of {currentStage} stage:");
+                Console.WriteLine($"\nRegister of matches of {currentStage} stage:");
                 ShowStage(matchRegister[currentStage - 1]);
             }
             else
