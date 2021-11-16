@@ -4,7 +4,7 @@ namespace FootballFansLib
 {
     public class FootballTeam
     {
-        public int NumberOfAwards { internal set; get; }
+        public int NumberOfAwards { set; get; }    //internal set
         public Person this[int index]
         {
             get

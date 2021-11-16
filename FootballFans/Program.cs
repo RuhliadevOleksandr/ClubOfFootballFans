@@ -11,6 +11,7 @@ namespace FootballFans
             FootballFan user = AddUser();
             List<FanClub> fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
             List<FootballTeam> teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
+            (List<List<Season>> seasons, List<List<FootballTeam>> participantsOfSeasons) = DataFromFile.CreateSeasons("Seasons.txt", "FootballTeams.txt");
             Match.Types type = Match.Types.ChampionsLeague;
             List<Season> matchRegister = Committee.CreateSeason(in teamRegister, type);
             int numberOfStages = Committee.GetNumberOfStages(in teamRegister);
@@ -22,7 +23,7 @@ namespace FootballFans
                 ShowMenu();
                 Console.Write("Choose one point of the list: ");
                 bool isParsed = Int32.TryParse(Console.ReadLine(), out int choise);
-                if (choise <= 9 && choise >= 0 && isParsed)
+                if (choise <= 11 && choise >= 0 && isParsed)
                 {
                     switch (choise)
                     {
@@ -62,7 +63,7 @@ namespace FootballFans
                         case 6:
                             Console.WriteLine("\nYou have choosed the 6 point");
                             if (Convert.ToBoolean(currentStage))
-                                ShowResultOfMatches(GetParticipants(in matchRegister, currentStage, teamRegister));
+                                ShowResultOfMatches(GetParticipants(in matchRegister, currentStage, teamRegister), matchRegister);
                             else
                                 Console.WriteLine("\nNo stage finished yet! Please choose: \"to show matches of next stage\"");
                             break;
@@ -93,9 +94,35 @@ namespace FootballFans
                         case 9:
                             Console.WriteLine("\nYou have choosed the 9 point");
                             if (currentStage == numberOfStages)
-                                ShowResultOfMatches(in teamRegister);
+                                ShowResultOfMatches(in teamRegister, in matchRegister);
                             else
                                 Console.WriteLine("\nSeason isn't finished yet! Please choose: \"to show matches of next stage\"");
+                            break;
+                        case 10:
+                            Console.WriteLine("\nYou have choosed the 10 point");
+                            if (seasons != null)
+                            {
+                                foreach (List<Season> season in seasons)
+                                {
+                                    ShowMatches(in season, season.Count + 1);
+                                }
+                            }
+                            else
+                                Console.WriteLine("\nRecent seasons aresn't formed!");
+                            break;
+                        case 11:
+                            Console.WriteLine("\nYou have choosed the 11 point");
+                            if (participantsOfSeasons != null)
+                            {
+                                for(int i = 0; i < participantsOfSeasons.Count; i++)
+                                {
+                                    List<FootballTeam> participantsOfSeason = participantsOfSeasons[i];
+                                    List<Season> season = seasons[i];
+                                    ShowResultOfMatches(in participantsOfSeason, in season);
+                                }
+                            }
+                            else
+                                Console.WriteLine("\nRecent results aresn't formed!");
                             break;
                     }
                 }
@@ -137,6 +164,8 @@ namespace FootballFans
             Console.WriteLine(" Enter 7 - to show matches of next stage");
             Console.WriteLine(" Enter 8 - to show matches of season");
             Console.WriteLine(" Enter 9 - to show result of season");
+            Console.WriteLine(" Enter 10 - to show recent matches of seasons");
+            Console.WriteLine(" Enter 11 - to show recent result of seasons");
             Console.WriteLine("\n========================================\n");
         }
         static void ShowFanClubs(in List<FanClub> fanClubs)
@@ -225,10 +254,10 @@ namespace FootballFans
                 Console.WriteLine($"Date of the {j} match: {match.DateOfTheMatch}");
             }
         }
-        static void ShowResultOfMatches(in List<FootballTeam> commands)
+        static void ShowResultOfMatches(in List<FootballTeam> commands, in List<Season> season)
         {
             Console.WriteLine("\n========================================\n");
-            Console.WriteLine("Result of matches(number of awards):");
+            Console.WriteLine($"Result of {season[0][0].TypeOfMatch} matches(number of awards):");
             commands.Sort((team, team2) => team2.NumberOfAwards.CompareTo(team.NumberOfAwards));
             foreach (FootballTeam command in commands)
 	        {
