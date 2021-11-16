@@ -6,6 +6,16 @@ namespace FootballFansLib
     {
         public int NumberOfMembers { get; private set; }
         public string NameOfGroup { get; private set; }
+        public Person this[int index]
+        {
+            get
+            {
+                if(index >= 0 && index < NumberOfMembers)
+                    return group[index];
+                else
+                    throw new ArgumentOutOfRangeException("\nIndex must be more than or equal 0 and less than number of members!");
+            }
+        }
         private Person[] group;
         public Group(Person[] people, string nameOfGroup)
         {
@@ -38,15 +48,6 @@ namespace FootballFansLib
             }
             else
                 throw new NullReferenceException("You can't create a group of people from nothing!");
-        }
-        public string[] GetSurnamesOfMember()
-        {
-            string[] surnames = new string[NumberOfMembers];
-            for (int i = 0; i < NumberOfMembers; i++)
-            {
-                surnames[i] = group[i].Surname;
-            }
-            return surnames;
         }
         public void AddMember(Person person)
         {

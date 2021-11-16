@@ -86,11 +86,10 @@ namespace FootballFans
         {
             foreach (FanClub fanClub in fanClubs)
 	        {
-                string[] surnames = fanClub.GetSurnamesOfClub();
                 int numberOfMembers = fanClub.GetNumberOfMembers();
                 for (int i = 0; i < numberOfMembers; i++)
                 {
-                    if (surnames[i] == footballFan.Surname)
+                    if (fanClub[i].Surname == footballFan.Surname)
                     {
                         fanClub.RemoveFan(footballFan);
                         Console.WriteLine($"\nYou have left the {fanClub.GetNameOfClub()}");

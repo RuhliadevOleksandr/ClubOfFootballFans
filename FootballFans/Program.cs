@@ -157,10 +157,9 @@ namespace FootballFans
                     Console.WriteLine(fanClub.FavouriteTeam);
                 }
                 int numberOfMembers = fanClub.GetNumberOfMembers();
-                string[] surnames = fanClub.GetSurnamesOfClub();
                 for (int j = 0; j < numberOfMembers; j++)
                 {
-                    Console.WriteLine($"Member {j + 1} : {surnames[j]}");
+                    Console.WriteLine($"Member {j + 1} : {fanClub[j].Surname}");
                 }    
             }
             Console.WriteLine("\n========================================\n");
@@ -174,10 +173,9 @@ namespace FootballFans
 	        {
                 Console.WriteLine($"\n{command.GetNameOfTeam()}:");
                 int numberOfMembers = command.GetNumberOfMembers();
-                string[] surnames = command.GetSurnamesOfTeam();
                 for (int j = 0; j < numberOfMembers; j++)
                 {
-                    Console.WriteLine($"Surname: {surnames[j]}");
+                    Console.WriteLine($"Surname: {command[j].Surname}");
                 }
         	}
             Console.WriteLine("\n========================================\n");

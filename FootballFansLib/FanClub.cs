@@ -63,6 +63,16 @@ namespace FootballFansLib
 
             }
         }
+        public Person this[int index]
+        {
+            get
+            {
+                if(index >= 0 && index < club.NumberOfMembers)
+                    return club[index];
+                else
+                    throw new ArgumentOutOfRangeException("\nIndex must be more than or equal 0 and less than number of members!");
+            }
+        }
         public FanClub(FootballFan[] footballFans, string nameFanClub)
         {
             try
@@ -77,10 +87,6 @@ namespace FootballFansLib
             {
                 throw new ArgumentException(exception.Message);
             }
-        }
-        public string[] GetSurnamesOfClub()
-        {
-            return club.GetSurnamesOfMember();
         }
         public void AddFan(FootballFan footballFan)
         {

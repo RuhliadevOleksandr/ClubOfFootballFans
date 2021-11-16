@@ -1,14 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FootballFansLib
 {
     public class FootballTeam
     {
         public int NumberOfAwards { internal set; get; }
-
+        public Person this[int index]
+        {
+            get
+            {
+                if(index >= 0 && index < team.NumberOfMembers)
+                    return team[index];
+                else
+                    throw new ArgumentOutOfRangeException("\nIndex must be more than or equal 0 and less than number of members!");
+            }
+        }
         private Group team;
         public FootballTeam(FootballPlayer[] footballPlayers, string nameFootballTeam)
         {
@@ -25,10 +31,6 @@ namespace FootballFansLib
             {
                 throw new ArgumentException(exception.Message);
             }
-        }
-        public string[] GetSurnamesOfTeam()
-        {
-            return team.GetSurnamesOfMember();
         }
         public void AddPlayer(FootballPlayer footballPlayer)
         {
