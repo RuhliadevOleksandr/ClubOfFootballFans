@@ -189,19 +189,10 @@ namespace FootballFans
             for (int i = 0; i < season.NumberOfMatches; i++)
 			{
                 Match match = season[i];
-                commands.Add(GetFootballTeam(teamRegister, match.MembersOfTheMatch[0]));
-                commands.Add(GetFootballTeam(teamRegister, match.MembersOfTheMatch[1]));
+                commands.Add(match.MembersOfTheMatch[0]);
+                commands.Add(match.MembersOfTheMatch[1]);
             }
             return commands;
-        }
-        static FootballTeam GetFootballTeam(in List<FootballTeam> commands, string nameOfTeam)
-        {
-            foreach (FootballTeam team in commands)
-	        {
-                if(team.GetNameOfTeam() == nameOfTeam)
-                    return team;
-	        }
-            return null;
         }
         static void ShowMatches(in List<Season> matchRegister, int currentStage)
         {
@@ -231,8 +222,8 @@ namespace FootballFans
 			{
                 j++;
                 Match match = season[i];
-                Console.Write($"\nMembers of the {j} match: {match.MembersOfTheMatch[0]}");
-                Console.WriteLine($" vs {match.MembersOfTheMatch[1]}");
+                Console.Write($"\nMembers of the {j} match: {match.MembersOfTheMatch[0].GetNameOfTeam()}");
+                Console.WriteLine($" vs {match.MembersOfTheMatch[1].GetNameOfTeam()}");
                 Console.WriteLine($"Date of the {j} match: {match.DateOfTheMatch}");
             }
         }

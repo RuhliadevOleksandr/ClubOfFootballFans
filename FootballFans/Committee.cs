@@ -66,7 +66,7 @@ namespace FootballFans
 			{
                 result[i] = FinishMatch(scores[2 * i], scores[2 * i + 1]);
 			}
-            matches.AddResultOfMatch(commands.ToArray(), result);
+            matches.AddResultOfMatch(result);
         }
         private static Match CreateMatch(ref List<FootballTeam> copyCommands, DateTime dateTime, Match.Types type)
         {

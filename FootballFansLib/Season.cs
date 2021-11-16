@@ -30,23 +30,11 @@ namespace FootballFansLib
             else
                 throw new NullReferenceException("You can't create a season from nothing!");
         }
-        public string[][] MembersOfTheMatches() 
-        {
-            string[][] membersOfTheMatches = new string[2][];
-            membersOfTheMatches[0] = new string[NumberOfMatches];
-            membersOfTheMatches[1] = new string[NumberOfMatches];
-            for (int i = 0; i < NumberOfMatches; i++)
-            {
-                membersOfTheMatches[0][i] = season[i].MembersOfTheMatch[0];
-                membersOfTheMatches[1][i] = season[i].MembersOfTheMatch[1];
-            }
-            return membersOfTheMatches;
-        }
-        public void AddResultOfMatch(FootballTeam[] teams, Match.Result[] result)
+        public void AddResultOfMatch(Match.Result[] result)
         {
             for (int i = 0; i < NumberOfMatches; i++)
             {
-                season[i].EndOfTheMatch(teams, result[i]);
+                season[i].EndOfTheMatch(result[i]);
             }
         }
     }
