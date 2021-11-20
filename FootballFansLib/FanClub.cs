@@ -1,69 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FootballFansLib
 {
     public class FanClub : IRootable
     {
-        private Group club;
+        private Group<FootballFan> club;
         private string _favouritePlayer;
         private string _favouriteTeam;
         public string FavouritePlayer
         {
-            get
-            {
-                return _favouritePlayer;
-            }
+            get { return _favouritePlayer; }
             set
             {
-                bool isCorrectSurname = true;
-                if (value == "" || value == null)
-                {
+                if (string.IsNullOrEmpty(value))
                     _favouritePlayer = null;
-                    throw new Exception("\nYou haven't got a favourite player!");
-                }
                 else
-                {
-                    for (int i = 0; i < value.Length; i++)
-                        if (!Char.IsLetter(value[i]))
-                            isCorrectSurname = false;
+                {  
+                    if (isCorrectName(value))
+                        _favouritePlayer = value;
+                    else
+                        throw new ArgumentException("\nSurname of player must have only letters!");
                 }
-                if (isCorrectSurname)
-                    _favouritePlayer = value;
-                else
-                    throw new ArgumentException("\nSurname of player must have only letters!");
             }
         }
         public string FavouriteTeam
         {
-            get
-            {
-                return _favouriteTeam;
-            }
+            get { return _favouriteTeam; }
             set
             {
-                bool isCorrectSurname = true;
-                if (value == "" || value == null)
-                {
+                if (string.IsNullOrEmpty(value))
                     _favouriteTeam = null;
-                    throw new Exception("\nYou haven't got a favourite team!");
-                }
                 else
                 {
-                    for (int i = 0; i < value.Length; i++)
-                        if (!Char.IsLetter(value[i]))
-                            isCorrectSurname = false;
+                    if (isCorrectName(value))
+                        _favouriteTeam = value;
+                    else
+                        throw new ArgumentException("\nName of team must have only letters!");
                 }
-                if (isCorrectSurname)
-                    _favouriteTeam = value;
-                else
-                    throw new ArgumentException("\nName of team must have only letters!");
-
             }
         }
-        public Person this[int index]
+        public FootballFan this[int index]
         {
             get
             {
@@ -73,50 +50,19 @@ namespace FootballFansLib
                     throw new ArgumentOutOfRangeException("\nIndex must be more than or equal 0 and less than number of members!");
             }
         }
-        public FanClub(FootballFan[] footballFans, string nameFanClub)
+        public FanClub(List<FootballFan> footballFans, string nameFanClub)
         {
-            try
-            {
-                club = new Group(footballFans, nameFanClub);
-            }
-            catch (NullReferenceException exception)
-            {
-                throw new NullReferenceException(exception.Message);
-            }
-            catch (ArgumentException exception)
-            {
-                throw new ArgumentException(exception.Message);
-            }
+            club = new Group<FootballFan>(footballFans, nameFanClub);
         }
         public void AddFan(FootballFan footballFan)
         {
-            try
-            {
-                club.AddMember(footballFan);
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(exception.Message);
-            }
+            club.AddMember(footballFan);
         }
         public void RemoveFan(FootballFan footballFan)
         {
-            try
-            {
-                club.RemoveMember(footballFan);
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(exception.Message);
-            }
+            club.RemoveMember(footballFan);
         }
-        public string GetNameOfClub()
-        {
-            return club.NameOfGroup;
-        }
-        public int GetNumberOfMembers()
-        {
-            return club.NumberOfMembers;
-        }
+        public string GetNameOfClub() { return club.NameOfGroup; }
+        public int GetNumberOfMembers() { return club.NumberOfMembers; }
     }
 }

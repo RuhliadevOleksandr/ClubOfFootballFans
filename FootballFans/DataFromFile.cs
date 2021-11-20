@@ -51,7 +51,7 @@ namespace FootballFans
             FavouritePlayer = favouritePlayer,
             FavouriteTeam = favouriteTeam
                         });
-                    clubs.Add(new FanClub(group.ToArray(), nameOfClub)
+                    clubs.Add(new FanClub(group, nameOfClub)
                     {
                         FavouritePlayer = favouritePlayer,
                         FavouriteTeam = favouriteTeam
@@ -80,7 +80,7 @@ namespace FootballFans
                     List<FootballPlayer> group = new List<FootballPlayer>();
                     for (int k = 0; k < numberOfMembers; k++)
                         group.Add(new FootballPlayer(CutText(text, ref stringIndex)));
-                    teams.Add(new FootballTeam(group.ToArray(), nameOfTeam));
+                    teams.Add(new FootballTeam(group, nameOfTeam));
                 }
                 else
                     stringIndex++;

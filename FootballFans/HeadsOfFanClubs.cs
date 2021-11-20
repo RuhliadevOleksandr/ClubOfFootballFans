@@ -26,7 +26,7 @@ namespace FootballFans
                             footballFans.Add(new FootballFan(surname));
                         }
                         Console.Write("\nEnter the name of fan club: ");
-                        club = new FanClub(footballFans.ToArray(), Console.ReadLine());
+                        club = new FanClub(footballFans, Console.ReadLine());
                         Console.Write("\nEnter the favourite player: ");
                         club.FavouritePlayer = Console.ReadLine();
                         Console.Write("\nEnter the favourite team: ");

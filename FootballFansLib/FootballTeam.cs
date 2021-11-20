@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FootballFansLib
 {
     public class FootballTeam
     {
+        private Group<FootballPlayer> team;
         public int NumberOfAwards { set; get; }    //internal set
-        public Person this[int index]
+        public FootballPlayer this[int index]
         {
             get
             {
@@ -15,52 +17,20 @@ namespace FootballFansLib
                     throw new ArgumentOutOfRangeException("\nIndex must be more than or equal 0 and less than number of members!");
             }
         }
-        private Group team;
-        public FootballTeam(FootballPlayer[] footballPlayers, string nameFootballTeam)
+        public FootballTeam(List<FootballPlayer> footballPlayers, string nameFootballTeam)
         {
-            try
-            {
-                team = new Group(footballPlayers, nameFootballTeam);
-                NumberOfAwards = 0;
-            }
-            catch (NullReferenceException exception)
-            {
-                throw new NullReferenceException(exception.Message);
-            }
-            catch (ArgumentException exception)
-            {
-                throw new ArgumentException(exception.Message);
-            }
+            team = new Group<FootballPlayer>(footballPlayers, nameFootballTeam);
+            NumberOfAwards = 0;
         }
         public void AddPlayer(FootballPlayer footballPlayer)
         {
-            try
-            {
-                team.AddMember(footballPlayer);
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(exception.Message);
-            }
+            team.AddMember(footballPlayer);
         }
         public void RemovePlayer(FootballPlayer footballPlayer)
         {
-            try
-            {
-                team.RemoveMember(footballPlayer);
-            }
-            catch (Exception exception)
-            {
-                throw new Exception(exception.Message);
-            }
+            team.RemoveMember(footballPlayer);
         }
-        public string GetNameOfTeam()
-        {
-            return team.NameOfGroup;
-        }
-        public int GetNumberOfMembers()
-        {
-            return team.NumberOfMembers;
-        }
+        public string GetNameOfTeam() { return team.NameOfGroup; }
+        public int GetNumberOfMembers() { return team.NumberOfMembers; }
     }
 }
