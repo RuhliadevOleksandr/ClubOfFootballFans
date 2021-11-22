@@ -120,9 +120,9 @@ namespace FootballFans
 			}
             return (seasons, footballTeams);
         }
-        private static Match[] FormMatches(int numberOfMatches, in List<FootballTeam> commands, string[] text ,ref int stringIndex, Match.Types type)
+        private static List<Match> FormMatches(int numberOfMatches, in List<FootballTeam> commands, string[] text ,ref int stringIndex, Match.Types type)
         {
-            Match[] match = new Match[numberOfMatches];
+            List<Match> matches = new List<Match>();
             for (int i = 0; i < numberOfMatches; i++)
 			{
                 List<string> membersOfTheMatch = CutVS(CutText(text, ref stringIndex));
@@ -144,9 +144,9 @@ namespace FootballFans
                 }
                 string dateOfTheMatch = CutText(text, ref stringIndex);
                 DateTime dateTime = DateTime.ParseExact(dateOfTheMatch, "MM/dd/yyyy hh:mm:ss tt", null);
-                match[i] = new Match(firstTeam, secondTeam, dateTime, type);
+                matches.Add( new Match(firstTeam, secondTeam, dateTime, type));
 			}
-            return match;
+            return matches;
         }
         private static void SetResult( in List<FootballTeam> commands, string[] text ,ref int stringIndex)
         {

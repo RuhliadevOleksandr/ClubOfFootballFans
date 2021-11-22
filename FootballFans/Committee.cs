@@ -50,22 +50,18 @@ namespace FootballFans
         {
             List<FootballTeam> copyCommands = new List<FootballTeam>(commands);
             List<DateTime> dateTimes = RandomDateList(commands.Count / 2);
-            Match[] stage = new Match[commands.Count / 2];
+            List<Match> stage = new List<Match>();
             for (int i = 0; i < commands.Count / 2; i++)
-			{
-                stage[i] = CreateMatch(ref copyCommands, dateTimes[i], type);
-			}
+                stage.Add(CreateMatch(ref copyCommands, dateTimes[i], type));
             Season season = new Season(stage);
             return season;
         }
         internal static void FinishStage(in Season matches, in List<FootballTeam> commands)
         {
-            Match.Result[] result = new Match.Result[commands.Count / 2];
+            List<Match.Result> result = new List<Match.Result>();
             List<int> scores = RandomList(commands.Count, 0, 5);
-            for (int i = 0; i < result.Length; i++)
-			{
-                result[i] = FinishMatch(scores[2 * i], scores[2 * i + 1]);
-			}
+            for (int i = 0; i < commands.Count / 2; i++)
+                result.Add(FinishMatch(scores[2 * i], scores[2 * i + 1]));
             matches.AddResultOfMatch(result);
         }
         private static Match CreateMatch(ref List<FootballTeam> copyCommands, DateTime dateTime, Match.Types type)

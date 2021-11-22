@@ -1,41 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace FootballFansLib
 {
     public class Season
     {
-        public int NumberOfMatches { get; private set; }
-        public Match this[int index]
-        {
-            get
-            {
-                return season[index];
-            }
+        public int NumberOfMatches { get { return season.Count; } }
+        public Match this[int index] 
+        { 
+            get 
+            { 
+                if(index >= 0 && index < NumberOfMatches)
+                    return season[index];
+                else
+                    throw new ArgumentOutOfRangeException("\nIndex must be more than or equal 0 and less than number of matches!");
+            } 
         }
-        private Match[] season;
-        public Season(Match[] matches)
+        private List<Match> season;
+        public Season(List<Match> matches)
         {
             if (matches != null)
-            {
-                NumberOfMatches = matches.Length;
-                season = new Match[NumberOfMatches];
-                for (int i = 0; i < NumberOfMatches; i++)
-                {
-                    season[i] = matches[i];
-                }
-            }
+                season = new List<Match>(matches);
             else
-                throw new NullReferenceException("You can't create a season from nothing!");
+                throw new NullReferenceException("\nSeason was not created! You can't create a season from nothing!");
         }
-        public void AddResultOfMatch(Match.Result[] result)
+        public void AddResultOfMatch(List<Match.Result> results)
         {
-            for (int i = 0; i < NumberOfMatches; i++)
-            {
-                season[i].EndOfTheMatch(result[i]);
-            }
+            if(results != null)
+                for (int i = 0; i < NumberOfMatches; i++)
+                    season[i].EndOfTheMatch(results[i]);
+            else
+                throw new NullReferenceException("\nResuts of matches were not added!");
         }
     }
 }
