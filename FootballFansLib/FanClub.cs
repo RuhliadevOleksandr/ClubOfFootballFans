@@ -40,6 +40,13 @@ namespace FootballFansLib
                 }
             }
         }
+        private bool isCorrectName(string name)
+        {
+            for (int i = 0; i < name.Length; i++)
+                        if (!Char.IsLetter(name[i]))
+                            return false;
+            return true;
+        }
         public FootballFan this[int index]
         {
             get
