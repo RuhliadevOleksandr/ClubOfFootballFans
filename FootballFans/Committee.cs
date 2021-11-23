@@ -23,23 +23,22 @@ namespace FootballFans
 			}
             return stage;
         }
-        internal static void QualifyCommands(ref List<FootballTeam> commands)
+        internal static void QualifyCommands(ref List<FootballTeam> commands, in Season seasons)
         {
-            if(commands.Count > 2)
+            if (commands.Count > 2)
             {
                 int numberOfCommandsToRemove = commands.Count / 2;
+                int[] indexToRemove = new int[numberOfCommandsToRemove];
+                List<int> numberOfAwards = NumberOfAwards(in commands, in seasons);
                 for (int i = 0; i < numberOfCommandsToRemove; i++)
-		        {
-                    FootballTeam teamToRemove = commands[0];
-                    foreach (FootballTeam team in commands)
-	                {
-                        if(team.NumberOfAwards < teamToRemove.NumberOfAwards)
-                        {
-                            teamToRemove = team;
-                        }
-        	        }
-                    commands.Remove(teamToRemove);
+                {
+                    if (numberOfAwards[2 * i] > numberOfAwards[2 * i + 1])
+                        indexToRemove[i] = 2 * i + 1;
+                    else
+                        indexToRemove[i] = 2 * i;
                 }
+                for (int i = numberOfCommandsToRemove - 1; i >= 0; i--)
+                    commands.RemoveAt(indexToRemove[i]);
             }
             else
             {
@@ -58,11 +57,11 @@ namespace FootballFans
         }
         internal static void FinishStage(in Season matches, in List<FootballTeam> commands)
         {
-            List<Match.Result> result = new List<Match.Result>();
             List<int> scores = RandomList(commands.Count, 0, 5);
+            List<(int, int)> results = new List<(int, int)>();
             for (int i = 0; i < commands.Count / 2; i++)
-                result.Add(FinishMatch(scores[2 * i], scores[2 * i + 1]));
-            matches.AddResultOfMatch(result);
+                results.Add((scores[2 * i], scores[2 * i + 1]));
+            matches.AddResultOfMatch(results);
         }
         private static Match CreateMatch(ref List<FootballTeam> copyCommands, DateTime dateTime, Match.Types type)
         {
@@ -94,17 +93,29 @@ namespace FootballFans
 			}
             return dateTimes;
         }
-        private static Match.Result FinishMatch(int firstTeamScore, int secondTeamScore)
+        private static List<int> NumberOfAwards(in List<FootballTeam> commands, in Season stage)
         {
-            if(firstTeamScore > secondTeamScore)
-                return Match.Result.Win;
-            else
+            List<int> numberOfAwards = new List<int>();
+            for (int i = 0; i < commands.Count; i++)
+                numberOfAwards.Add(0);
+            for (int i = 0; i < stage.NumberOfMatches; i++)
             {
-                if (firstTeamScore < secondTeamScore)
-                    return Match.Result.Lose;
+                (int firstScore, int secondScore) = stage[i].ResultOfTheMatch;
+                (FootballTeam firstTeam, FootballTeam secondTeam) = stage[i].MembersOfTheMatch;
+                if (firstScore > secondScore)
+                    numberOfAwards[commands.IndexOf(firstTeam)] += 2;
                 else
-                    return Match.Result.Draw;
+                {
+                    if (firstScore < secondScore)
+                        numberOfAwards[commands.IndexOf(secondTeam)] += 2;
+                    else
+                    {
+                        numberOfAwards[commands.IndexOf(firstTeam)] += 1;
+                        numberOfAwards[commands.IndexOf(secondTeam)] += 1;
+                    }
+                }
             }
+            return numberOfAwards;
         }
     }
 }

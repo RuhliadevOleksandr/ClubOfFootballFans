@@ -24,11 +24,11 @@ namespace FootballFansLib
             else
                 throw new NullReferenceException("\nSeason was not created! You can't create a season from nothing!");
         }
-        public void AddResultOfMatch(List<Match.Result> results)
+        public void AddResultOfMatch(List<(int, int)> results)
         {
-            if(results != null)
+            if (results != null)
                 for (int i = 0; i < NumberOfMatches; i++)
-                    season[i].EndOfTheMatch(results[i]);
+                    season[i].ResultOfTheMatch = results[i];
             else
                 throw new NullReferenceException("\nResuts of matches were not added!");
         }

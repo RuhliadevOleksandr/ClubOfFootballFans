@@ -6,7 +6,6 @@ namespace FootballFansLib
     public class FootballTeam
     {
         private Group<FootballPlayer> team;
-        public int NumberOfAwards { set; get; }    //internal set
         public FootballPlayer this[int index]
         {
             get
@@ -20,7 +19,6 @@ namespace FootballFansLib
         public FootballTeam(List<FootballPlayer> footballPlayers, string nameFootballTeam)
         {
             team = new Group<FootballPlayer>(footballPlayers, nameFootballTeam);
-            NumberOfAwards = 0;
         }
         public void AddPlayer(FootballPlayer footballPlayer)
         {

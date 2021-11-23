@@ -11,7 +11,7 @@ namespace FootballFans
             FootballFan user = AddUser();
             List<FanClub> fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
             List<FootballTeam> teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
-            (List<List<Season>> seasons, List<List<FootballTeam>> participantsOfSeasons) = DataFromFile.CreateSeasons("Seasons.txt", "FootballTeams.txt");
+            List<List<Season>> seasons = DataFromFile.CreateSeasons("Seasons.txt", "FootballTeams.txt");
             Match.Types type = Match.Types.ChampionsLeague;
             List<Season> matchRegister = Committee.CreateSeason(in teamRegister, type);
             int numberOfStages = Committee.GetNumberOfStages(in teamRegister);
@@ -63,7 +63,7 @@ namespace FootballFans
                         case 6:
                             Console.WriteLine("\nYou have choosed the 6 point");
                             if (Convert.ToBoolean(currentStage))
-                                ShowResultOfMatches(GetParticipants(in matchRegister, currentStage, teamRegister), matchRegister);
+                                ShowResultOfMatches(in matchRegister, currentStage);
                             else
                                 Console.WriteLine("\nNo stage finished yet! Please choose: \"to show matches of next stage\"");
                             break;
@@ -71,8 +71,9 @@ namespace FootballFans
                             Console.WriteLine("\nYou have choosed the 7 point");
                             try 
 	                        {
-                                List<FootballTeam> participants = GetParticipants(in matchRegister, currentStage, teamRegister);
-                                Committee.QualifyCommands(ref participants);
+                                List<FootballTeam> participants = GetParticipants(in matchRegister, currentStage);
+                                Season currentMatches = matchRegister[currentStage - 1];
+                                Committee.QualifyCommands(ref participants, in currentMatches);
                                 matchRegister.Add(Committee.CreateStage(in participants, type));
                                 currentStage++;
                                 Season stage = matchRegister[currentStage - 1];
@@ -94,7 +95,7 @@ namespace FootballFans
                         case 9:
                             Console.WriteLine("\nYou have choosed the 9 point");
                             if (currentStage == numberOfStages)
-                                ShowResultOfMatches(in teamRegister, in matchRegister);
+                                ShowResultOfMatches(in matchRegister, currentStage + 1);
                             else
                                 Console.WriteLine("\nSeason isn't finished yet! Please choose: \"to show matches of next stage\"");
                             break;
@@ -112,17 +113,15 @@ namespace FootballFans
                             break;
                         case 11:
                             Console.WriteLine("\nYou have choosed the 11 point");
-                            if (participantsOfSeasons != null)
+                            if (seasons != null)
                             {
-                                for(int i = 0; i < participantsOfSeasons.Count; i++)
+                                foreach (List<Season> season in seasons)
                                 {
-                                    List<FootballTeam> participantsOfSeason = participantsOfSeasons[i];
-                                    List<Season> season = seasons[i];
-                                    ShowResultOfMatches(in participantsOfSeason, in season);
+                                    ShowResultOfMatches(in season, season.Count + 1);
                                 }
                             }
                             else
-                                Console.WriteLine("\nRecent results aresn't formed!");
+                                Console.WriteLine("\nRecent results aren't formed!");
                             break;
                     }
                 }
@@ -209,15 +208,15 @@ namespace FootballFans
         	}
             Console.WriteLine("\n========================================\n");
         }
-        static List<FootballTeam> GetParticipants(in List<Season> matchRegister, int currentStage, in List<FootballTeam> teamRegister)
+        static List<FootballTeam> GetParticipants(in List<Season> matchRegister, int currentStage)
         {
             List<FootballTeam> commands = new List<FootballTeam>();
             Season season = matchRegister[currentStage - 1];
             for (int i = 0; i < season.NumberOfMatches; i++)
 			{
-                Match match = season[i];
-                commands.Add(match.MembersOfTheMatch[0]);
-                commands.Add(match.MembersOfTheMatch[1]);
+                (FootballTeam firstTeam, FootballTeam secondTeam) = season[i].MembersOfTheMatch;
+                commands.Add(firstTeam);
+                commands.Add(secondTeam);
             }
             return commands;
         }
@@ -242,28 +241,42 @@ namespace FootballFans
             }
             Console.WriteLine("\n========================================\n");
         }
-        static void ShowStage(in Season season)
+        static void ShowStage(in Season season, bool showResult = false)
         {
             int j = 0;
             for (int i = 0; i < season.NumberOfMatches; i++)
-			{
+            {
                 j++;
-                Match match = season[i];
-                Console.Write($"\nMembers of the {j} match: {match.MembersOfTheMatch[0].GetNameOfTeam()}");
-                Console.WriteLine($" vs {match.MembersOfTheMatch[1].GetNameOfTeam()}");
-                Console.WriteLine($"Date of the {j} match: {match.DateOfTheMatch}");
+                (FootballTeam firstTeam, FootballTeam secondTeam) = season[i].MembersOfTheMatch;
+                Console.Write($"\nMembers of the {j} match: {firstTeam.GetNameOfTeam()}");
+                Console.WriteLine($" vs {secondTeam.GetNameOfTeam()}");
+                Console.WriteLine($"Date of the {j} match: {season[i].DateOfTheMatch}");
+                if (showResult)
+                {
+                    (int firstScore, int secondScore) = season[i].ResultOfTheMatch;
+                    Console.WriteLine($"Result of the {j} match: ({firstScore} : {secondScore})");
+                }
             }
         }
-        static void ShowResultOfMatches(in List<FootballTeam> commands, in List<Season> season)
+        static void ShowResultOfMatches(in List<Season> matchRegister, int currentStage)
         {
             Console.WriteLine("\n========================================\n");
-            Console.WriteLine($"Result of {season[0][0].TypeOfMatch} matches(number of awards):");
-            commands.Sort((team, team2) => team2.NumberOfAwards.CompareTo(team.NumberOfAwards));
-            foreach (FootballTeam command in commands)
-	        {
-                Console.Write($"\n{command.GetNameOfTeam()}: ");
-                Console.WriteLine(command.NumberOfAwards);
-        	}
+            Console.WriteLine($"Result of {matchRegister[0][0].TypeOfMatch} matches:");
+            if (currentStage < matchRegister.Count + 1)
+            {
+                Console.WriteLine($"\nResult of matches of {currentStage} stage:");
+                ShowStage(matchRegister[currentStage - 1], true);
+            }
+            else
+            {
+                int i = 0;
+                foreach (Season stage in matchRegister)
+                {
+                    i++;
+                    Console.WriteLine($"\nResult of matches of {i} stage:");
+                    ShowStage(stage, true);
+                }
+            }
             Console.WriteLine("\n========================================\n");
         }
     }

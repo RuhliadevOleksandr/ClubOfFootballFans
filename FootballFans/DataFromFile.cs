@@ -15,7 +15,7 @@ namespace FootballFans
             stringIndex++;
             return result;
         }
-        private static List<string> CutVS(string text)
+        private static List<string> IntoList(string text)
         {
             List<string> result = new List<string>();
             string word = "";
@@ -27,6 +27,12 @@ namespace FootballFans
                 word += text[i];
             result.Add(word);
             return result;
+        }
+        private static (int, int) IntoCortege(string text)
+        {
+            int firstScore = (text[text.IndexOf("(") + 1]) - 48;
+            int secondScore = (text[text.IndexOf(")") - 1]) - 48;
+            return (firstScore, secondScore);
         }
         internal static List<FanClub> CreateFanClubs(string textName)
         {
@@ -48,8 +54,8 @@ namespace FootballFans
                     for (int k = 0; k < numberOfMembers; k++)
                         group.Add(new FootballFan(CutText(text, ref stringIndex))
                         {
-            FavouritePlayer = favouritePlayer,
-            FavouriteTeam = favouriteTeam
+                            FavouritePlayer = favouritePlayer,
+                            FavouriteTeam = favouriteTeam
                         });
                     clubs.Add(new FanClub(group, nameOfClub)
                     {
@@ -87,82 +93,67 @@ namespace FootballFans
             }
             return teams;
         }
-        internal static (List<List<Season>>, List<List<FootballTeam>>) CreateSeasons(string textNameOfSeasons, string textNameTeams)
+        internal static List<List<Season>> CreateSeasons(string textNameOfSeasons, string textNameTeams)
         {
             int stringIndex = 0;
             string[] text = File.ReadAllLines(textNameOfSeasons);
 
             int numberOfSeasons = Int32.Parse(CutText(text, ref stringIndex));
             List<List<Season>> seasons = new List<List<Season>>();
-            List<List<FootballTeam>> footballTeams = new List<List<FootballTeam>>();
+            List<FootballTeam> commands = new List<FootballTeam>(CreateTeams(textNameTeams));
             for (int i = 0; i < numberOfSeasons; i++)
-			{
+            {
                 stringIndex++;
                 if (stringIndex < text.Length && !String.IsNullOrEmpty(text[stringIndex]))
                 {
                     Enum.TryParse(CutText(text, ref stringIndex), out Match.Types type);
                     int numberOfStages = Int32.Parse(CutText(text, ref stringIndex));
                     List<Season> stages = new List<Season>();
-                    List<FootballTeam> commands = new List<FootballTeam>(CreateTeams(textNameTeams));
                     for (int j = 0; j < numberOfStages; j++)
                     {
                         stringIndex++;
                         int numberOfMatches = Convert.ToInt32(Math.Pow(2, numberOfStages - j) / 2);
-                        stages.Add( new Season(FormMatches(numberOfMatches,commands, text,  ref stringIndex, type)));
+                        stages.Add((FormStage(numberOfMatches, commands, text, ref stringIndex, type)));
                     }
-                    stringIndex++;
                     seasons.Add(stages);
-                    footballTeams.Add(commands);
-                    SetResult(footballTeams[i], text,  ref stringIndex);
                 }
                 else
                     stringIndex++;
-			}
-            return (seasons, footballTeams);
+            }
+            return seasons;
         }
-        private static List<Match> FormMatches(int numberOfMatches, in List<FootballTeam> commands, string[] text ,ref int stringIndex, Match.Types type)
+        private static Season FormStage(int numberOfMatches, in List<FootballTeam> commands, string[] text, ref int stringIndex, Match.Types type)
         {
             List<Match> matches = new List<Match>();
+            List<(int, int)> results = new List<(int, int)>();
             for (int i = 0; i < numberOfMatches; i++)
-			{
-                List<string> membersOfTheMatch = CutVS(CutText(text, ref stringIndex));
+            {
+                List<string> membersOfTheMatch = IntoList(CutText(text, ref stringIndex));
                 FootballTeam firstTeam = null;
-                foreach(FootballTeam team in commands)
+                foreach (FootballTeam team in commands)
                 {
                     if (membersOfTheMatch[0] == team.GetNameOfTeam())
-	                {
-                         firstTeam = team;
-	                }
+                    {
+                        firstTeam = team;
+                    }
                 }
                 FootballTeam secondTeam = null;
-                foreach(FootballTeam team in commands)
+                foreach (FootballTeam team in commands)
                 {
                     if (membersOfTheMatch[0] == team.GetNameOfTeam())
-	                {
+                    {
                         secondTeam = team;
-	                }
+                    }
                 }
                 string dateOfTheMatch = CutText(text, ref stringIndex);
+                (int, int) result = IntoCortege(CutText(text, ref stringIndex));
                 DateTime dateTime = DateTime.ParseExact(dateOfTheMatch, "MM/dd/yyyy hh:mm:ss tt", null);
-                matches.Add( new Match(firstTeam, secondTeam, dateTime, type));
-			}
-            return matches;
-        }
-        private static void SetResult( in List<FootballTeam> commands, string[] text ,ref int stringIndex)
-        {
-            stringIndex++;
-            foreach (FootballTeam team in commands)
-	        {
-                string nameOfTeam = "";
-                for (int i = 0; i < text[stringIndex].IndexOf(":"); i++)
-                    nameOfTeam += text[stringIndex][i];
-                int numberOfAwards = Int32.Parse(CutText(text, ref stringIndex));
-                foreach (FootballTeam command in commands)
-	            {
-                    if(command.GetNameOfTeam() == nameOfTeam)
-                        command.NumberOfAwards += numberOfAwards;
-	            }
-	        }
+                matches.Add(new Match(firstTeam, secondTeam, dateTime, type));
+                results.Add(result);
+            }
+            Season season = new Season(matches);
+            season.AddResultOfMatch(results);
+            return season;
         }
     }
 }
