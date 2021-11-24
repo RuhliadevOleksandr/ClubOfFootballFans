@@ -34,38 +34,13 @@ namespace FootballFans
             int secondScore = (text[text.IndexOf(")") - 1]) - 48;
             return (firstScore, secondScore);
         }
-        internal static List<FootballTeam> CreateTeams(string textName)
-        {
-            int stringIndex = 0;
-            string[] text = File.ReadAllLines(textName);
-
-            int numberOfFootballTeams = Int32.Parse(CutText(text, ref stringIndex));
-            List<FootballTeam> teams = new List<FootballTeam>();
-            for (int i = 0; i < numberOfFootballTeams; i++)
-            {
-                stringIndex++;
-                if (stringIndex < text.Length && !String.IsNullOrEmpty(text[stringIndex]))
-                {
-                    string nameOfTeam = CutText(text, ref stringIndex);
-                    int numberOfMembers = Int32.Parse(CutText(text, ref stringIndex));
-                    List<FootballPlayer> group = new List<FootballPlayer>();
-                    for (int k = 0; k < numberOfMembers; k++)
-                        group.Add(new FootballPlayer(CutText(text, ref stringIndex)));
-                    teams.Add(new FootballTeam(group, nameOfTeam));
-                }
-                else
-                    stringIndex++;
-            }
-            return teams;
-        }
-        internal static List<List<Season>> CreateSeasons(string textNameOfSeasons, string textNameTeams)
+        internal static List<List<Season>> CreateSeasons(string textNameOfSeasons, List<FootballTeam> commands)
         {
             int stringIndex = 0;
             string[] text = File.ReadAllLines(textNameOfSeasons);
 
             int numberOfSeasons = Int32.Parse(CutText(text, ref stringIndex));
             List<List<Season>> seasons = new List<List<Season>>();
-            List<FootballTeam> commands = new List<FootballTeam>(CreateTeams(textNameTeams));
             for (int i = 0; i < numberOfSeasons; i++)
             {
                 stringIndex++;
