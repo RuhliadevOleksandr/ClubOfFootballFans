@@ -8,9 +8,8 @@ namespace FootballFans
     {
         static void Main(string[] args)
         {
-            DataFromDB.Connect();
+            bool isGetData = DataFromDB.GetData(out List<FanClub> fanClubs);
             FootballFan user = AddUser();
-            List<FanClub> fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
             List<FootballTeam> teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
             List<List<Season>> seasons = DataFromFile.CreateSeasons("Seasons.txt", "FootballTeams.txt");
             Match.Types type = Match.Types.ChampionsLeague;
@@ -42,7 +41,7 @@ namespace FootballFans
                             break;
                         case 3:
                             Console.WriteLine("\nYou have choosed the 3 point");
-                            if (fanClubs != null)
+                            if (isGetData)
                                 ShowFanClubs(in fanClubs);
                             else
                                 Console.WriteLine("\nNo fan club created yet!");

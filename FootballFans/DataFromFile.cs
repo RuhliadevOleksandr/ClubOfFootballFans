@@ -34,41 +34,6 @@ namespace FootballFans
             int secondScore = (text[text.IndexOf(")") - 1]) - 48;
             return (firstScore, secondScore);
         }
-        internal static List<FanClub> CreateFanClubs(string textName)
-        {
-            int stringIndex = 0;
-            string[] text = File.ReadAllLines(textName);
-
-            int numberOfFanClubs = Int32.Parse(CutText(text, ref stringIndex));
-            List<FanClub> clubs = new List<FanClub>();
-            for (int i = 0; i < numberOfFanClubs; i++)
-            {
-                stringIndex++;
-                if (stringIndex < text.Length && !String.IsNullOrEmpty(text[stringIndex]))
-                {
-                    string nameOfClub = CutText(text, ref stringIndex);
-                    string favouriteTeam = CutText(text, ref stringIndex);
-                    string favouritePlayer = CutText(text, ref stringIndex);
-                    int numberOfMembers = Int32.Parse(CutText(text, ref stringIndex));
-                    List<FootballFan> group = new List<FootballFan>();
-                    for (int k = 0; k < numberOfMembers; k++)
-                        group.Add(new FootballFan(CutText(text, ref stringIndex))
-                        {
-                            FavouritePlayer = favouritePlayer,
-                            FavouriteTeam = favouriteTeam
-                        });
-                    clubs.Add(new FanClub(group, nameOfClub)
-                    {
-                        FavouritePlayer = favouritePlayer,
-                        FavouriteTeam = favouriteTeam
-                    });
-                }
-                else
-                    stringIndex++;
-            }
-
-            return clubs;
-        }
         internal static List<FootballTeam> CreateTeams(string textName)
         {
             int stringIndex = 0;
