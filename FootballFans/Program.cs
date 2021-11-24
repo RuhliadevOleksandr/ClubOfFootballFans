@@ -8,6 +8,7 @@ namespace FootballFans
     {
         static void Main(string[] args)
         {
+            DataFromDB.Connect();
             FootballFan user = AddUser();
             List<FanClub> fanClubs = DataFromFile.CreateFanClubs("FanClubs.txt");
             List<FootballTeam> teamRegister = DataFromFile.CreateTeams("FootballTeams.txt");
