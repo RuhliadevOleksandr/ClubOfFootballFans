@@ -6,10 +6,11 @@ using System.Collections.Generic;
 
 namespace FootballFans
 {
-	internal static class DataFromDB
-	{
-		public static bool GetData(out List<FanClub> fanClubs, out List<FootballTeam> footballTeams)
-		{
+    internal static class DataFromDB
+    {
+        public static bool GetData(out List<FanClub> fanClubs, out List<FootballTeam> footballTeams, out List<List<Season>> seasons)
+        {
+            seasons = null;
             fanClubs = null;
             footballTeams = null;
             string provider = ConfigurationManager.AppSettings["provider"];
@@ -30,6 +31,7 @@ namespace FootballFans
                 }
                 fanClubs = GetFanClubs(command, connection);
                 footballTeams = GetFootballTeams(command, connection);
+                seasons = GetSeasons(command, connection, footballTeams);
                 return true;
             }
         }
@@ -49,14 +51,14 @@ namespace FootballFans
                     fan.FavouritePlayer = dbDataReader["PlayerSurname"]?.ToString() ?? null;
                     fan.FavouriteTeam = dbDataReader["NameOfFootballTeam"]?.ToString() ?? null;
                     int indexOfFanClub = -1;
-                    for(int i = 0; i < fanClubs.Count; i++)
+                    for (int i = 0; i < fanClubs.Count; i++)
                     {
-                        if(fanClubs[i].GetNameOfClub() == currentNameOfFanClub)
+                        if (fanClubs[i].GetNameOfClub() == currentNameOfFanClub)
                             indexOfFanClub = i;
                     }
                     if (indexOfFanClub == -1)
                     {
-                        List <FootballFan> fans = new List<FootballFan>{ fan };
+                        List<FootballFan> fans = new List<FootballFan> { fan };
                         fanClubs.Add(new FanClub(fans, currentNameOfFanClub));
                         for (int i = 0; i < fanClubs.Count; i++)
                         {
@@ -104,6 +106,84 @@ namespace FootballFans
                 }
             }
             return footballTeams;
+        }
+        private static List<List<Season>> GetSeasons(DbCommand command, DbConnection connection, in List<FootballTeam> matchRegister)
+        {
+            List<List<Season>> seasons = new List<List<Season>>();
+            command.Connection = connection;
+            command.CommandText = "USE FootballFans; SELECT	FootballMatch.MatchID, NameOfFootballTeam AS 'NameOfTeam', FootballMatch.DateOfTheMatch, FootballMatch.ResultOfTheMatch, FootballMatch.MatchType, Stage.StageID, Season.SeasonID ";
+            command.CommandText += "FROM (FootballMatch INNER JOIN MatchesAndTeams ON FootballMatch.MatchID = MatchesAndTeams.MatchID) INNER JOIN FootballTeam ON MatchesAndTeams.FootballTeamID = FootballTeam.FootballTeamID ";
+            command.CommandText += "INNER JOIN Stage ON FootballMatch.StageID = Stage.StageID INNER JOIN Season ON Stage.SeasonID = Season.SeasonID;";
+            using (DbDataReader dbDataReader = command.ExecuteReader())
+            {
+                Season stage;
+                int lastStage = 1;
+                int seasonID = 0;
+                int indexOfSeason = 0;
+                List<int> matchIDs = new List<int>();
+                List<(int, int)> results = new List<(int, int)>();
+                List<FootballTeam>[] footballTeams = new List<FootballTeam>[2];
+                footballTeams[0] = new List<FootballTeam>();
+                footballTeams[1] = new List<FootballTeam>();
+                List<Match> matches = new List<Match>();
+                while (dbDataReader.Read())
+                {
+                    if (Convert.ToInt32(dbDataReader["StageID"]) != lastStage)
+                    {
+                        lastStage++;
+                        stage = new Season(matches);
+                        matches.Clear();
+                        stage.AddResultOfMatch(results);
+                        results.Clear();
+                        if (seasonID != indexOfSeason)
+                        {
+                            indexOfSeason++;
+                            List<Season> season = new List<Season>();
+                            season.Add(stage);
+                            seasons.Add(season);
+                        }
+                        else
+                        {
+                            seasons[indexOfSeason - 1].Add(stage);
+                        }
+                    }
+                    int matchID = Convert.ToInt32(dbDataReader["MatchID"]);
+                    int indexOfMatches = matchIDs.IndexOf(matchID);
+                    if (indexOfMatches == -1)
+                    {
+                        matchIDs.Add(matchID);
+                        footballTeams[0].Add(FindTeam(matchRegister, dbDataReader["NameOfTeam"].ToString()));
+                    }
+                    else
+                    {
+                        footballTeams[1].Add(FindTeam(matchRegister, dbDataReader["NameOfTeam"].ToString()));
+                        DateTime dateOfMatch = DateTime.ParseExact(dbDataReader["DateOfTheMatch"].ToString(), "M/d/yyyy HH:mm:ss tt", null);
+                        Enum.TryParse(dbDataReader["MatchType"].ToString(), out Match.Types type);
+                        matches.Add(new Match(footballTeams[0][indexOfMatches], footballTeams[1][indexOfMatches], dateOfMatch, type));
+                        results.Add(IntoCortege(dbDataReader["ResultOfTheMatch"].ToString()));
+                        seasonID = Convert.ToInt32(dbDataReader["SeasonID"]);
+                    }
+                }
+                stage = new Season(matches);
+                stage.AddResultOfMatch(results);
+                seasons[indexOfSeason - 1].Add(stage);
+            }
+            return seasons;
+        }
+        private static FootballTeam FindTeam(in List<FootballTeam> teams, string nameOfTeam)
+        {
+            foreach (FootballTeam team in teams)
+            {
+                if (team.GetNameOfTeam() == nameOfTeam)
+                    return team;
+            }
+            return null;
+        }
+        private static (int, int) IntoCortege(string text)
+        {
+            int firstScore = (text[text.IndexOf("(") + 1]) - 48;
+            int secondScore = (text[text.IndexOf(")") - 1]) - 48;
+            return (firstScore, secondScore);
         }
     }
 }

@@ -8,9 +8,8 @@ namespace FootballFans
     {
         static void Main(string[] args)
         {
-            bool isGetData = DataFromDB.GetData(out List<FanClub> fanClubs, out List<FootballTeam> teamRegister);
+            bool isGetData = DataFromDB.GetData(out List<FanClub> fanClubs, out List<FootballTeam> teamRegister, out List<List<Season>> seasons);
             FootballFan user = AddUser();
-            List<List<Season>> seasons = DataFromFile.CreateSeasons("Seasons.txt", teamRegister);
             Match.Types type = Match.Types.ChampionsLeague;
             List<Season> matchRegister = Committee.CreateSeason(in teamRegister, type);
             int numberOfStages = Committee.GetNumberOfStages(in teamRegister);
@@ -100,7 +99,7 @@ namespace FootballFans
                             break;
                         case 10:
                             Console.WriteLine("\nYou have choosed the 10 point");
-                            if (seasons != null)
+                            if (isGetData)
                             {
                                 foreach (List<Season> season in seasons)
                                 {
@@ -112,7 +111,7 @@ namespace FootballFans
                             break;
                         case 11:
                             Console.WriteLine("\nYou have choosed the 11 point");
-                            if (seasons != null)
+                            if (isGetData)
                             {
                                 foreach (List<Season> season in seasons)
                                 {

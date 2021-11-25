@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataFromDB.cs" />
-    <Compile Include="DataFromFile.cs" />
     <Compile Include="Committee.cs" />
     <Compile Include="HeadsOfFanClubs.cs" />
     <Compile Include="Program.cs" />
