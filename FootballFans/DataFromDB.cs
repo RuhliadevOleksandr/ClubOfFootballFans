@@ -8,7 +8,7 @@ namespace FootballFans
 {
     internal static class DataFromDB
     {
-        public static bool GetData(out List<FanClub> fanClubs, out List<FootballTeam> footballTeams, out List<List<Season>> seasons)
+        public static bool GetData(out List<FanClub> fanClubs, out List<FootballTeam> footballTeams, out List<Season> seasons)
         {
             seasons = null;
             fanClubs = null;
@@ -107,21 +107,20 @@ namespace FootballFans
             }
             return footballTeams;
         }
-        private static List<List<Season>> GetSeasons(DbCommand command, DbConnection connection, in List<FootballTeam> matchRegister)
+        private static List<Season> GetSeasons(DbCommand command, DbConnection connection, in List<FootballTeam> matchRegister)
         {
-            List<List<Season>> seasons = new List<List<Season>>();
+            List<Season> seasons = new List<Season>();
             command.Connection = connection;
-            command.CommandText = "USE FootballFans; SELECT	FootballMatch.MatchID, NameOfFootballTeam AS 'NameOfTeam', FootballMatch.DateOfTheMatch, FootballMatch.ResultOfTheMatch, FootballMatch.MatchType, Stage.StageID, Season.SeasonID ";
+            command.CommandText = "USE FootballFans; SELECT	FootballMatch.MatchID, NameOfFootballTeam AS 'NameOfTeam', FootballMatch.DateOfTheMatch, FootballMatch.ResultOfTheMatch, FootballMatch.MatchType, Stage.StageID, Season.SeasonName, Season.SeasonID ";
             command.CommandText += "FROM (FootballMatch INNER JOIN MatchesAndTeams ON FootballMatch.MatchID = MatchesAndTeams.MatchID) INNER JOIN FootballTeam ON MatchesAndTeams.FootballTeamID = FootballTeam.FootballTeamID ";
             command.CommandText += "INNER JOIN Stage ON FootballMatch.StageID = Stage.StageID INNER JOIN Season ON Stage.SeasonID = Season.SeasonID;";
             using (DbDataReader dbDataReader = command.ExecuteReader())
             {
-                Season stage;
+                Stage stage;
                 int lastStage = 1;
                 int seasonID = 0;
                 int indexOfSeason = 0;
                 List<int> matchIDs = new List<int>();
-                List<(int, int)> results = new List<(int, int)>();
                 List<FootballTeam>[] footballTeams = new List<FootballTeam>[2];
                 footballTeams[0] = new List<FootballTeam>();
                 footballTeams[1] = new List<FootballTeam>();
@@ -131,20 +130,19 @@ namespace FootballFans
                     if (Convert.ToInt32(dbDataReader["StageID"]) != lastStage)
                     {
                         lastStage++;
-                        stage = new Season(matches);
+                        stage = new Stage(matches);
                         matches.Clear();
-                        stage.AddResultOfMatch(results);
-                        results.Clear();
                         if (seasonID != indexOfSeason)
                         {
                             indexOfSeason++;
-                            List<Season> season = new List<Season>();
-                            season.Add(stage);
+                            List<Stage> stages = new List<Stage>();
+                            stages.Add(stage);
+                            Season season = new Season(stages, dbDataReader["SeasonName"].ToString());
                             seasons.Add(season);
                         }
                         else
                         {
-                            seasons[indexOfSeason - 1].Add(stage);
+                            seasons[indexOfSeason - 1].AddStage(stage);
                         }
                     }
                     int matchID = Convert.ToInt32(dbDataReader["MatchID"]);
@@ -159,14 +157,14 @@ namespace FootballFans
                         footballTeams[1].Add(FindTeam(matchRegister, dbDataReader["NameOfTeam"].ToString()));
                         DateTime dateOfMatch = DateTime.ParseExact(dbDataReader["DateOfTheMatch"].ToString(), "M/d/yyyy HH:mm:ss tt", null);
                         Enum.TryParse(dbDataReader["MatchType"].ToString(), out Match.Types type);
-                        matches.Add(new Match(footballTeams[0][indexOfMatches], footballTeams[1][indexOfMatches], dateOfMatch, type));
-                        results.Add(IntoCortege(dbDataReader["ResultOfTheMatch"].ToString()));
+                        Match match = new Match(footballTeams[0][indexOfMatches], footballTeams[1][indexOfMatches], dateOfMatch, type);
+                        match.ResultOfTheMatch = IntoCortege(dbDataReader["ResultOfTheMatch"].ToString());
+                        matches.Add(match);
                         seasonID = Convert.ToInt32(dbDataReader["SeasonID"]);
                     }
                 }
-                stage = new Season(matches);
-                stage.AddResultOfMatch(results);
-                seasons[indexOfSeason - 1].Add(stage);
+                stage = new Stage(matches);
+                seasons[indexOfSeason - 1].AddStage(stage);
             }
             return seasons;
         }

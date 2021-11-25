@@ -6,13 +6,13 @@ namespace FootballFans
 {
     internal static class Committee
     {
-        internal static List<Season> CreateSeason(in List<FootballTeam> commands, Match.Types type)
+        internal static Season CreateSeason(in List<FootballTeam> commands, Match.Types type)
         {
-            List<Season> matchRegister = new List<Season>();
-            Season stage = CreateStage(in commands, type);
+            List<Stage> matchRegister = new List<Stage>();
+            Stage stage = CreateStage(in commands, type);
             matchRegister.Add(stage);
             FinishStage(in stage, in commands);
-            return matchRegister;
+            return new Season(matchRegister, type.ToString() + " 2022");
         }
         internal static int GetNumberOfStages(in List<FootballTeam> stageParticipants)
         {
@@ -23,7 +23,7 @@ namespace FootballFans
 			}
             return stage;
         }
-        internal static void QualifyCommands(ref List<FootballTeam> commands, in Season seasons)
+        internal static void QualifyCommands(ref List<FootballTeam> commands, in Stage seasons)
         {
             if (commands.Count > 2)
             {
@@ -45,23 +45,20 @@ namespace FootballFans
                 throw new ArgumentException("\nNumber of commands must be more than 1!");
             }
         }
-        internal static Season CreateStage(in List<FootballTeam> commands, Match.Types type)
+        internal static Stage CreateStage(in List<FootballTeam> commands, Match.Types type)
         {
             List<FootballTeam> copyCommands = new List<FootballTeam>(commands);
             List<DateTime> dateTimes = RandomDateList(commands.Count / 2);
-            List<Match> stage = new List<Match>();
+            List<Match> matches = new List<Match>();
             for (int i = 0; i < commands.Count / 2; i++)
-                stage.Add(CreateMatch(ref copyCommands, dateTimes[i], type));
-            Season season = new Season(stage);
-            return season;
+                matches.Add(CreateMatch(ref copyCommands, dateTimes[i], type));
+            return new Stage(matches);
         }
-        internal static void FinishStage(in Season matches, in List<FootballTeam> commands)
+        internal static void FinishStage(in Stage matches, in List<FootballTeam> commands)
         {
             List<int> scores = RandomList(commands.Count, 0, 5);
-            List<(int, int)> results = new List<(int, int)>();
             for (int i = 0; i < commands.Count / 2; i++)
-                results.Add((scores[2 * i], scores[2 * i + 1]));
-            matches.AddResultOfMatch(results);
+                matches[i].ResultOfTheMatch = (scores[2 * i], scores[2 * i + 1]);
         }
         private static Match CreateMatch(ref List<FootballTeam> copyCommands, DateTime dateTime, Match.Types type)
         {
@@ -93,7 +90,7 @@ namespace FootballFans
 			}
             return dateTimes;
         }
-        private static List<int> NumberOfAwards(in List<FootballTeam> commands, in Season stage)
+        private static List<int> NumberOfAwards(in List<FootballTeam> commands, in Stage stage)
         {
             List<int> numberOfAwards = new List<int>();
             for (int i = 0; i < commands.Count; i++)

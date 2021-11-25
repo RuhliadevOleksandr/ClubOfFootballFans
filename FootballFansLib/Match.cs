@@ -8,7 +8,7 @@ namespace FootballFansLib
         public Types TypeOfMatch { private set; get; }
         public DateTime DateOfTheMatch { private set; get; }
         public (FootballTeam, FootballTeam) MembersOfTheMatch { private set; get; }
-        public (int, int) ResultOfTheMatch { internal set; get; }
+        public (int, int) ResultOfTheMatch { set; get; }
         public enum Result { Win, Draw, Lose }
         public Match(FootballTeam team, FootballTeam team2, DateTime dateOfTheMatch, Types type)
         {
